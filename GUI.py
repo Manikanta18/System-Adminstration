@@ -30,6 +30,7 @@ grub=PhotoImage(file="Grub_logo.png")
 stop=PhotoImage(file="stop.png")
 swap=PhotoImage(file="swap.png")
 install=PhotoImage(file="install.png")
+user_pic=PhotoImage(file="user.png")
 
 ############## Assignment 3 ########################
 
@@ -72,28 +73,33 @@ name2 = StringVar()
 os_name = StringVar()
 time_value = IntVar()
 
-#Login
-NLabel = Label(tab1,bd=4, text = "User Name", relief = RIDGE)
-NLabel.place(x = 190, y = 25)
-Name = Entry(tab1, textvariable=name, bd=4)
-Name.place(x = 280, y = 25)
-ELabel = Label(tab1,bd=4, text = "Password", relief = RIDGE)
-ELabel.place(x = 472, y = 25)
-E = Entry(tab1, textvariable=entryb1,show = "*", bd=4)
-E.place(x = 550, y = 25)
-b1 = Button(tab1, text="Login",bd=3,command= lambda: hideThis(Name,E, NLabel,ELabel) if entryb1.get()!= '' and name.get() != '' else messageBox.showwarning("WARNING", "Enter Login Details") )
-b1.place(x = 740, y = 25)
+new_name = StringVar()
+new_pwd = StringVar()
+new_uid = StringVar()
+new_shell = StringVar()
 
-NLabel2 = Label(tab2,bd=4, text = "User Name", relief = RIDGE)
-NLabel2.place(x = 190, y = 25)
-Name2 = Entry(tab2, textvariable=name2, bd=4)
-Name2.place(x = 280, y = 25)
-ELabel2 = Label(tab2,bd=4, text = "Password", relief = RIDGE)
-ELabel2.place(x = 472, y = 25)
-E2 = Entry(tab2, textvariable=entryb2,show = "*", bd=4)
-E2.place(x = 550, y = 25)
-b2 = Button(tab2, text="Login",bd=3,command= lambda: hideThis2(Name2,E2, NLabel2,ELabel2) if entryb2.get()!= '' and name2.get() != '' else messageBox.showwarning("WARNING", "Enter Login Details") )
-b2.place(x = 740, y = 25)
+#Login
+NLabel = Label(root,bd=4, text = "User Name", relief = RIDGE)
+NLabel.place(x = 190, y = 38)
+Name = Entry(root, textvariable=name, bd=4)
+Name.place(x = 280, y = 38)
+ELabel = Label(root,bd=4, text = "Password", relief = RIDGE)
+ELabel.place(x = 472, y = 38)
+E = Entry(root, textvariable=entryb1,show = "*", bd=4)
+E.place(x = 550, y = 38)
+b1 = Button(root, text="Login",bd=3,command= lambda: hideThis(Name,E, NLabel,ELabel) if entryb1.get()!= '' and name.get() != '' else messageBox.showwarning("WARNING", "Enter Login Details") )
+b1.place(x = 740, y = 38)
+
+# NLabel2 = Label(tab2,bd=4, text = "User Name", relief = RIDGE)
+# NLabel2.place(x = 190, y = 25)
+# Name2 = Entry(tab2, textvariable=name2, bd=4)
+# Name2.place(x = 280, y = 25)
+# ELabel2 = Label(tab2,bd=4, text = "Password", relief = RIDGE)
+# ELabel2.place(x = 472, y = 25)
+# E2 = Entry(tab2, textvariable=entryb2,show = "*", bd=4)
+# E2.place(x = 550, y = 25)
+# b2 = Button(tab2, text="Login",bd=3,command= lambda: hideThis2(Name2,E2, NLabel2,ELabel2) if entryb2.get()!= '' and name2.get() != '' else messageBox.showwarning("WARNING", "Enter Login Details") )
+# b2.place(x = 740, y = 25)
 
 #headFrame
 headFrame = Frame(tab1, bg="tan3", bd=8, relief = RIDGE)
@@ -101,8 +107,6 @@ headFrame.place(x = 30, y = 60, width=775, height=50)
 headFrame_Label = Label(headFrame, text=" Assignment 3 ", relief = SUNKEN,bd = 4)
 headFrame_Label.config(font=headlabelfont)
 headFrame_Label.pack(expand=YES)
-
-#-----------------QUESTION1--------------------------------
 
 #After login
 def hideThis(Name,E,NLabel,ELabel):
@@ -117,25 +121,26 @@ def hideThis(Name,E,NLabel,ELabel):
     ELabel.place_forget()
     E.place_forget()
     b1.place_forget()
-    newLabel = Label(tab1, text="Hi, "+user+" !",relief = RAISED,padx =10, pady=6,bd =4, bg="cyan3")
-    newLabel.place(x = 630, y = 22, width = 175)
+    newLabel = Label(root, text="Hi, "+user+" !",relief = RAISED,padx =10, pady=6,bd =4, bg="cyan3")
+    newLabel.place(x = 630, y = 38, width = 175)
 
-#After login
-def hideThis2(Name2,E2,NLabel2,ELabel2):
-    global entryb2
-    global name2
-    content2 = entryb2.get()
-    user2 = name2.get()
-    print(user2)
-    print(content2)
-    NLabel2.place_forget()
-    Name2.place_forget()
-    ELabel2.place_forget()
-    E2.place_forget()
-    b2.place_forget()
-    newLabel2 = Label(tab2, text="Hi, "+user2+" !",relief = RAISED,padx =10, pady=6,bd =4, bg="cyan3")
-    newLabel2.place(x = 630, y = 22, width = 175)
+# #After login
+# def hideThis2(Name2,E2,NLabel2,ELabel2):
+#     global entryb2
+#     global name2
+#     content2 = entryb2.get()
+#     user2 = name2.get()
+#     print(user2)
+#     print(content2)
+#     NLabel2.place_forget()
+#     Name2.place_forget()
+#     ELabel2.place_forget()
+#     E2.place_forget()
+#     b2.place_forget()
+#     newLabel2 = Label(tab2, text="Hi, "+user2+" !",relief = RAISED,padx =10, pady=6,bd =4, bg="cyan3")
+#     newLabel2.place(x = 630, y = 22, width = 175)
 
+#-----------------QUESTION1--------------------------------
 
 def linux():
     global entryb1
@@ -193,7 +198,6 @@ DropDown1.place(x=55,y=255)
 Button1 = Button(tab1, text="Change", fg="black", bg="snow", command=change_os, bd=3)
 Button1.place(x=170,y=255)
 
-
 #-----------------QUESTION2--------------------------------
 
 def grub_time():
@@ -232,8 +236,6 @@ Button2.place(x=550,y=255)
 #mv -v ~/Desktop/first/* ~/Desktop/temp
 #rm -r temp
 
-
-
 thirdFrame = Frame(tab1, bg="steel blue", bd = 8, relief = RIDGE)
 thirdFrame.place(x = 30, y = 330 , width=370, height=150)
 thirdFrame_Label = Label(thirdFrame, text=Question3, justify=LEFT, relief = SUNKEN, pady=6, bg="old lace", bd = 4)
@@ -249,8 +251,6 @@ Button3.pack(side=BOTTOM)
 #sudo cp /home/manikanta/Pictures/.jpg /boot/grub/
 #cd /boot/grub/
 #sudo rm *.jpg
-
-
 
 # def select_image():
 #     global entryb1
@@ -438,7 +438,6 @@ def rstrt():
     popup.resizable(0, 0)
     popup.mainloop()
 
-
 sixthFrame = Frame(tab1, bg="steel blue", bd = 8, relief = RIDGE)
 sixthFrame.place(x = 435, y = 510, width=370, height=150)
 sixthFrame_Lable2 = Label(sixthFrame, image=shutdown).pack(side="right")
@@ -451,8 +450,8 @@ Button7.pack(side=LEFT, anchor = SW)
 Button6 = Button(sixthFrame, text="Shutdown", fg="white", bg="red2", command=stDwn, bd=3)
 Button6.pack(side=LEFT, anchor = SW)
 
-
 ############## Assignment 4 ########################
+
 #headFrame
 headFrame2 = Frame(tab2, bg="tan3", bd=8, relief = RIDGE)
 headFrame2.place(x = 30, y = 60, width=775, height=50)
@@ -460,6 +459,31 @@ headFrame_Label2 = Label(headFrame2, text=" Assignment 4 ", relief = SUNKEN,bd =
 headFrame_Label2.config(font=headlabelfont)
 headFrame_Label2.pack(expand=YES)
 
+seventhframe = Frame(tab2, bg="steel blue", bd = 8, relief = RIDGE)
+seventhframe.place(x = 30, y = 150, width=775, height=300)
+seventhframe_Lable2 = Label(seventhframe, image=user_pic).pack(side="left")
+seventhframe_Label = Label(seventhframe, text="""Single User Mode:  Enter User Details to Create User in Linux""", justify=LEFT, relief = SUNKEN, pady=6, bg="old lace", bd = 4)
+seventhframe_Label.config(font=framelabelfont)
+seventhframe_Label.place(x=200,y=2,width=545, height=50)
+
+userLabel = Label(seventhframe,bd=4, text = "User Name", relief = RIDGE, pady=3)
+userLabel.place(x = 270, y = 70, width=230)
+userEntry = Entry(seventhframe, textvariable=new_name, bd=4)
+userEntry.place(x = 500, y = 70, width=230)
+pwdLabel = Label(seventhframe,bd=4, text = "Password", relief = RIDGE, pady=3)
+pwdLabel.place(x = 270, y = 115, width=230)
+pwdEntry = Entry(seventhframe, textvariable=new_pwd,show = "*", bd=4)
+pwdEntry.place(x = 500, y = 115, width=230)
+uidLabel = Label(seventhframe,bd=4, text = "User ID", relief = RIDGE, pady=3)
+uidLabel.place(x = 270, y = 160, width=230)
+uidEntry = Entry(seventhframe, textvariable=new_uid,show = "*", bd=4)
+uidEntry.place(x = 500, y = 160, width=230)
+shellLabel = Label(seventhframe,bd=4, text = "User's login shell", relief = RIDGE, pady=3)
+shellLabel.place(x = 270, y = 205, width=230)
+shellEntry = Entry(seventhframe, textvariable=new_shell,show = "*", bd=4)
+shellEntry.place(x = 500, y = 205, width=230)
+Button8 = Button(seventhframe, text="Create", fg="black", bg="white", bd=3)
+Button8.place(x = 450, y = 250, width=100)
 
 #####################################################
 
