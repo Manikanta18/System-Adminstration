@@ -69,7 +69,7 @@ entryb1 = StringVar()
 name = StringVar()
 entryb2 = StringVar()
 name2 = StringVar()
-os = StringVar()
+os_name = StringVar()
 time_value = IntVar()
 
 #Login
@@ -162,8 +162,8 @@ def windows():
         messageBox.showwarning("WARNING", "Login Required")
 
 def change_os():
-    global os
-    os_value = os.get()
+    global os_name
+    os_value = os_name.get()
     print("change_os" + os_value)
     if os_value =='Ubuntu':
         linux()
@@ -174,10 +174,10 @@ def change_os():
 
 # on change dropdown value
 def change_dropdown(*args):
-    print( os.get() )
+    print( os_name.get() )
 
 # link function to change dropdown
-os.trace('w', change_dropdown)
+os_name.trace('w', change_dropdown)
 
 firstFrame = Frame(tab1, bg="steel blue", bd = 8, relief = RIDGE)
 firstFrame.place(x = 30, y = 150, width=370, height=150)
@@ -185,9 +185,9 @@ firstFrame_Label = Label(firstFrame, text=Question1, justify=LEFT, relief = SUNK
 firstFrame_Label.config(font=framelabelfont)
 firstFrame_Label.place(width=260, height=70)
 firstFrame_Label2 = Label(firstFrame, image=grub).pack(side="right")
-os.set('-Select-')
+os_name.set('-Select-')
 choices = {'Ubuntu','Windows'}
-DropDown1 = OptionMenu(tab1, os, *choices)
+DropDown1 = OptionMenu(tab1, os_name, *choices)
 DropDown1.place(x=55,y=255)
 
 Button1 = Button(tab1, text="Change", fg="black", bg="snow", command=change_os, bd=3)
@@ -299,29 +299,29 @@ def splash_screen():
         messageBox.showwarning("WARNING", "Login Required")
 
 #sudo cp /home/manikanta/Pictures/logos/mkLogo2.png  /usr/share/plymouth/themes/ubuntu-logo
-# echo "mani8996" | sudo -S sed -i 's/logo_filename = .*"/logo_filename = "mkLogo2.png"/' /usr/share/plymouth/themes/ubuntu-logo/ubuntu-logo.script
-#sudo sed -i 's/logo_filename = .*"/logo_filename = "dummy.png"/' /usr/share/plymouth/themes/ubuntu-logo/ubuntu-logo.script
+# echo "mani8996" | sudo -S sed -i 's/logo_filename = .*$"/logo_filename = "mkLogo.png"/' /usr/share/plymouth/themes/ubuntu-logo/ubuntu-logo.script
+
 def splash_logo():
     global entryb1
     pwd = entryb1.get()
     filename =  filedialog.askopenfilename(initialdir = "/home",title = "Select Picture",filetypes = (("PNG files","*.png"),("all files","*.*")))
+    image_name = os.path.basename(filename)
     print(filename)
-    filename = os.path.basename(filename)
+    print(image_name)
     print(filename)
-    # if filename != '':
-    #     if pwd != '':
-    #         cmd = "echo \""+pwd+"\" | sudo -S cp "+image_name+" /usr/share/plymouth/themes/ubuntu-logo"
-    #         cmd2 = "echo \""+pwd+"\" | sudo -S sed -i \'s/logo_filename = .*$/logo_filename = "+image_name+";\' /usr/share/plymouth/themes/ubuntu-logo/ubuntu-logo.script"
-    #         print(cmd2)
-    #         # subprocess.call(cmd, shell=True)
-    #         # subprocess.call(cmd2, shell=True)
-    #         # subprocess.call()
-    #         # subprocess.call(['sudo', 'update-initramfs', '-u']
-    #         # messageBox.showinfo("Ubuntu’s boot splash screen and logo", "Successfully changed")
-    #     else:
-    #         messageBox.showwarning("WARNING", "Login Required")
-    # else:
-    #     messageBox.showwarning("WARNING", "Image not selected")
+    if filename != '':
+        if pwd != '':
+            cmd = "echo \""+pwd+"\" | sudo -S cp "+filename+" /usr/share/plymouth/themes/ubuntu-logo"
+            cmd2 = "echo \""+pwd+"\" | sudo -S sed -i \'s/logo_filename = .*\"/logo_filename = \""+image_name+"\"/\' /usr/share/plymouth/themes/ubuntu-logo/ubuntu-logo.script"
+            print(cmd2)
+            subprocess.call(cmd, shell=True)
+            subprocess.call(cmd2, shell=True)
+            subprocess.call(['sudo', 'update-initramfs', '-u'])
+            messageBox.showinfo("Ubuntu’s boot splash screen and logo", "Successfully changed")
+        else:
+            messageBox.showwarning("WARNING", "Login Required")
+    else:
+        messageBox.showwarning("WARNING", "Image not selected")
 
 fourthFrame = Frame(tab1, bg="steel blue", bd = 8, relief = RIDGE)
 fourthFrame.place(x = 435, y = 330 , width=370, height=150)
