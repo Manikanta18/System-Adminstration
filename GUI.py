@@ -17,7 +17,10 @@ tab1 = ttk.Frame(tabControl)
 tabControl.add(tab1, text='Assignment 3')
 
 tab2 = ttk.Frame(tabControl)
-tabControl.add(tab2, text='Assignment 4')
+tabControl.add(tab2, text='Assignment 4-1')
+
+tab3 = ttk.Frame(tabControl)
+tabControl.add(tab3, text='Assignment 4-2')
 
 tabControl.pack(expand=1, fill="both")
 
@@ -34,6 +37,7 @@ stop=PhotoImage(file="stop.png")
 swap=PhotoImage(file="swap.png")
 install=PhotoImage(file="install.png")
 user_pic=PhotoImage(file="user.png")
+batch_pic=PhotoImage(file="batch.png")
 
 
 ############## Assignment 3 ########################
@@ -471,7 +475,8 @@ Button7.pack(side=LEFT, anchor = SW)
 Button6 = Button(sixthFrame, text="Shutdown", fg="white", bg="red2", command=stDwn, bd=3)
 Button6.pack(side=LEFT, anchor = SW)
 
-############## Assignment 4 ########################
+
+############## Assignment 4 part1 ########################
 
 
 #headFrame
@@ -481,16 +486,21 @@ headFrame_Label2 = Label(headFrame2, text=" Assignment 4 ", relief = SUNKEN,bd =
 headFrame_Label2.config(font=headlabelfont)
 headFrame_Label2.pack(expand=YES)
 
-seventhframe = Frame(tab2, bg="steel blue", bd = 8, relief = RIDGE)
-seventhframe.place(x = 30, y = 150, width=775, height=300)
-seventhframe_Lable2 = Label(seventhframe, image=user_pic).pack(side="left")
-seventhframe_Label = Label(seventhframe, text="""Single User Mode:  Enter User Details to Create User in Linux""", justify=LEFT, relief = SUNKEN, pady=6, bg="old lace", bd = 4)
-seventhframe_Label.config(font=framelabelfont)
-seventhframe_Label.place(x=200,y=2,width=545, height=50)
+csv_filename =""
+
+def uploadCSV():
+    global csv_filename
+    csv_filename =  filedialog.askopenfilename(initialdir = "/home",title = "Select Picture",filetypes = (("CSV files","*.csv"),("all files","*.*")))
+    print(csv_filename)
+    if csv_filename!= "":
+        messageBox.showinfo("Add csv", "Successfully Added")
+    else:
+        messageBox.showwarning("WARNING", "upload csv file required")
 
 
 def batchMode():
-    data = pd.read_csv("user_names.csv")
+    global csv_filename
+    data = pd.read_csv(csv_filename)
     df = pd.DataFrame(data)
 
     matrix =[]
@@ -513,15 +523,17 @@ def batchMode():
 
     global entryb1
     pwd = entryb1.get()
-
-    for i in range(0,range_lenth):
-        cmd1 = "echo \""+pwd+"\" | sudo -S groupadd -g \""+uid[i]+"\" \""+username[i]+"\""
-        print(cmd1)
-        cmd2 = "sudo useradd -m \""+username[i]+"\" -p \""+pswd[i]+"\" -u \""+uid[i]+"\" -g \""+uid[i]+"\" -s \""+shll[i]+"\""
-        print(cmd2)
-        subprocess.call(cmd1, shell=True)
-        subprocess.call(cmd2, shell=True)
+    if pwd != '':
+        for i in range(0,range_lenth):
+            cmd1 = "echo \""+pwd+"\" | sudo -S groupadd -g \""+uid[i]+"\" \""+username[i]+"\""
+            print(cmd1)
+            cmd2 = "sudo useradd -m \""+username[i]+"\" -p \""+pswd[i]+"\" -u \""+uid[i]+"\" -g \""+uid[i]+"\" -s \""+shll[i]+"\""
+            print(cmd2)
+            subprocess.call(cmd1, shell=True)
+            subprocess.call(cmd2, shell=True)
         messageBox.showinfo("Add Users", "Successfully Added")
+    else:
+        messageBox.showwarning("WARNING", "Login Required")
 
 
 # on change dropdown value
@@ -544,7 +556,7 @@ def addSingleUser():
         user_shell = new_shell.get()
         print(user_name,user_pwd,user_id,user_shell)
 
-        if user_name != '' or  user_pwd != '' or user_id != '' or user_shell != '':
+        if user_name != '' and  user_pwd != '' and user_id != '' and user_shell != '':
             cmd1 = "echo \""+pwd+"\" | sudo -S groupadd -g \""+user_id+"\" \""+user_name+"\""
             cmd2 = "sudo useradd -m \""+user_name+"\" -p \""+user_pwd+"\" -u \""+user_id+"\" -g \""+user_id+"\" -s \""+user_shell+"\""
             print(cmd1)
@@ -558,32 +570,63 @@ def addSingleUser():
     else:
         messageBox.showwarning("WARNING", "Login Required")
 
+#single User
+seventhFrame = Frame(tab2, bg="steel blue", bd = 8, relief = RIDGE)
+seventhFrame.place(x = 30, y = 150, width=775, height=300)
+seventhFrameLable2 = Label(seventhFrame, image=user_pic).pack(side="left")
+seventhFrameLabel = Label(seventhFrame, text="""Single User Mode:  Enter User Details to Create User in Linux""", justify=LEFT, relief = SUNKEN, pady=6, bg="old lace", bd = 4)
+seventhFrameLabel.config(font=framelabelfont)
+seventhFrameLabel.place(x=200,y=2,width=545, height=50)
 
-userLabel = Label(seventhframe,bd=4, text = "User Name", relief = RIDGE, pady=3)
+userLabel = Label(seventhFrame,bd=4, text = "User Name", relief = RIDGE, pady=3)
 userLabel.place(x = 270, y = 70, width=230)
-userEntry = Entry(seventhframe, textvariable=new_name, bd=4)
+userEntry = Entry(seventhFrame, textvariable=new_name, bd=4)
 userEntry.place(x = 500, y = 70, width=230)
-pwdLabel = Label(seventhframe,bd=4, text = "Password", relief = RIDGE, pady=3)
+pwdLabel = Label(seventhFrame,bd=4, text = "Password", relief = RIDGE, pady=3)
 pwdLabel.place(x = 270, y = 115, width=230)
-pwdEntry = Entry(seventhframe, textvariable=new_pwd,show = "*", bd=4)
+pwdEntry = Entry(seventhFrame, textvariable=new_pwd,show = "*", bd=4)
 pwdEntry.place(x = 500, y = 115, width=230)
-uidLabel = Label(seventhframe,bd=4, text = "User ID", relief = RIDGE, pady=3)
+uidLabel = Label(seventhFrame,bd=4, text = "User ID", relief = RIDGE, pady=3)
 uidLabel.place(x = 270, y = 160, width=230)
-uidEntry = Entry(seventhframe, textvariable=new_uid, bd=4)
+uidEntry = Entry(seventhFrame, textvariable=new_uid, bd=4)
 uidEntry.place(x = 500, y = 160, width=230)
-shellLabel = Label(seventhframe,bd=4, text = "User's login shell", relief = RIDGE, pady=3)
+shellLabel = Label(seventhFrame,bd=4, text = "User's login shell", relief = RIDGE, pady=3)
 shellLabel.place(x = 270, y = 205, width=230)
 # shellEntry = Entry(seventhframe, textvariable=new_shell, bd=4)
 # shellEntry.place(x = 500, y = 205, width=230)
 new_shell.set('-Select-')
 choices2 = {'/bin/bash','/bin/sh'}
-DropDown2 = OptionMenu(seventhframe, new_shell, *choices2)
-DropDown2.place(x = 500, y = 205, width=220)
-Button8 = Button(seventhframe, text="Create", fg="black", bg="white", bd=3, command=addSingleUser)
+DropDown2 = OptionMenu(seventhFrame, new_shell, *choices2)
+DropDown2.place(x = 505, y = 205, width=220)
+Button8 = Button(seventhFrame, text="Create", fg="black", bg="white", bd=3, command=addSingleUser)
 Button8.place(x = 450, y = 250, width=100)
 
-#####################################################
 
+#batchMode
+eightFrame = Frame(tab2, bg="steel blue", bd = 8, relief = RIDGE)
+eightFrame.place(x = 30, y = 480, width=775, height=220)
+eightFrameLable2 = Label(eightFrame, image=batch_pic).pack(side="left")
+eightFrameLabel = Label(tab2, text="""batch Mode User Management""", justify=LEFT, relief = SUNKEN, pady=6, bg="old lace", bd = 4)
+eightFrameLabel.config(font=framelabelfont)
+eightFrameLabel.place(x=200,y=492,width=545, height=50)
+
+Button9 = Button(tab2, text="upload CSV", fg="black", bg="white", bd=3, command=uploadCSV)
+Button9.place(x=350,y=590)
+Button91 = Button(tab2, text="Create", fg="black", bg="white", bd=3, command=batchMode)
+Button91.place(x=500,y=590, width=100)
+
+
+############## Assignment 4 part2 ########################
+
+#headFrame
+headFrame3 = Frame(tab3, bg="tan3", bd=8, relief = RIDGE)
+headFrame3.place(x = 30, y = 60, width=775, height=50)
+headFrame_Label3 = Label(headFrame3, text=" Assignment 4 ", relief = SUNKEN,bd = 4)
+headFrame_Label3.config(font=headlabelfont)
+headFrame_Label3.pack(expand=YES)
+
+
+#####################################################
 root.minsize(845, 750)
 root.resizable(0, 0)
 root.mainloop()
