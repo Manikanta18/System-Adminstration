@@ -4,6 +4,9 @@ from tkinter.colorchooser import *
 import tkinter.messagebox as messageBox
 import subprocess
 import os
+import pandas as pd
+import crypt, getpass
+
 
 root = Tk()
 root.title("System Admin")
@@ -31,6 +34,7 @@ stop=PhotoImage(file="stop.png")
 swap=PhotoImage(file="swap.png")
 install=PhotoImage(file="install.png")
 user_pic=PhotoImage(file="user.png")
+
 
 ############## Assignment 3 ########################
 
@@ -65,7 +69,6 @@ BURG boot loader. """
 l5 = """sudo reboot """
 
 #variables
-
 entryb1 = StringVar()
 name = StringVar()
 entryb2 = StringVar()
@@ -108,6 +111,7 @@ headFrame_Label = Label(headFrame, text=" Assignment 3 ", relief = SUNKEN,bd = 4
 headFrame_Label.config(font=headlabelfont)
 headFrame_Label.pack(expand=YES)
 
+
 #After login
 def hideThis(Name,E,NLabel,ELabel):
     global entryb1
@@ -123,6 +127,7 @@ def hideThis(Name,E,NLabel,ELabel):
     b1.place_forget()
     newLabel = Label(root, text="Hi, "+user+" !",relief = RAISED,padx =10, pady=6,bd =4, bg="cyan3")
     newLabel.place(x = 630, y = 38, width = 175)
+
 
 # #After login
 # def hideThis2(Name2,E2,NLabel2,ELabel2):
@@ -142,6 +147,7 @@ def hideThis(Name,E,NLabel,ELabel):
 
 #-----------------QUESTION1--------------------------------
 
+
 def linux():
     global entryb1
     pwd = entryb1.get()
@@ -153,6 +159,7 @@ def linux():
         messageBox.showinfo("GRUB_DEFAULT", "Successfully changed")
     else:
         messageBox.showwarning("WARNING", "Login Required")
+
 
 def windows():
     global entryb1
@@ -166,16 +173,21 @@ def windows():
     else:
         messageBox.showwarning("WARNING", "Login Required")
 
+
 def change_os():
     global os_name
     os_value = os_name.get()
     print("change_os" + os_value)
-    if os_value =='Ubuntu':
-        linux()
-    elif os_value == 'Windows':
-        windows()
+    if os_value != '':
+        if os_value =='Ubuntu':
+            linux()
+        elif os_value == 'Windows':
+            windows()
+        else:
+            print("error in selection")
     else:
-        print("error in selection")
+        messageBox.showwarning("OS Order", "Choose OS to change")
+
 
 # on change dropdown value
 def change_dropdown(*args):
@@ -199,6 +211,7 @@ Button1 = Button(tab1, text="Change", fg="black", bg="snow", command=change_os, 
 Button1.place(x=170,y=255)
 
 #-----------------QUESTION2--------------------------------
+
 
 def grub_time():
     global entryb1
@@ -274,6 +287,7 @@ Button3.pack(side=BOTTOM)
 #/usr/share/plymouth/themes/ubuntu-logo
 #sudo update-initramfs -u
 
+
 def splash_screen():
     global entryb1
     pwd = entryb1.get()
@@ -300,6 +314,7 @@ def splash_screen():
 
 #sudo cp /home/manikanta/Pictures/logos/mkLogo2.png  /usr/share/plymouth/themes/ubuntu-logo
 # echo "mani8996" | sudo -S sed -i 's/logo_filename = .*$"/logo_filename = "mkLogo.png"/' /usr/share/plymouth/themes/ubuntu-logo/ubuntu-logo.script
+
 
 def splash_logo():
     global entryb1
@@ -336,6 +351,7 @@ Button41 = Button(tab1, text="Splash logo", fg="black", bg="white", bd=3, comman
 Button41.place(x=605,y=435)
 
 #-----------------QUESTION5--------------------------------
+
 
 def read():
     popup = Tk()
@@ -389,6 +405,7 @@ Button5.pack(side=BOTTOM)
 
 #----------------------Question6-------------------------
 
+
 #shutdown Counter
 counter = 60
 def counterStdwn_label(label):
@@ -398,6 +415,7 @@ def counterStdwn_label(label):
         label.config(text="Your system Shutdowns in "+str(counter))
         label.after(1000, count)
     count()
+
 
 #retsrt counter
 counter2 = 60
@@ -409,6 +427,7 @@ def counterRstrt_label(label):
             label.config(text="Your system Restarts in "+str(counter2))
             label.after(1000, count)
     count()
+
 
 #shutdown
 def stDwn():
@@ -425,6 +444,7 @@ def stDwn():
     popup.resizable(0, 0)
     popup.mainloop()
 
+
 #Restart
 def rstrt():
     popup = Tk()
@@ -437,6 +457,7 @@ def rstrt():
     popup.minsize(300, 100)
     popup.resizable(0, 0)
     popup.mainloop()
+
 
 sixthFrame = Frame(tab1, bg="steel blue", bd = 8, relief = RIDGE)
 sixthFrame.place(x = 435, y = 510, width=370, height=150)
@@ -452,6 +473,7 @@ Button6.pack(side=LEFT, anchor = SW)
 
 ############## Assignment 4 ########################
 
+
 #headFrame
 headFrame2 = Frame(tab2, bg="tan3", bd=8, relief = RIDGE)
 headFrame2.place(x = 30, y = 60, width=775, height=50)
@@ -466,6 +488,77 @@ seventhframe_Label = Label(seventhframe, text="""Single User Mode:  Enter User D
 seventhframe_Label.config(font=framelabelfont)
 seventhframe_Label.place(x=200,y=2,width=545, height=50)
 
+
+def batchMode():
+    data = pd.read_csv("user_names.csv")
+    df = pd.DataFrame(data)
+
+    matrix =[]
+    username = []
+    uid = []
+    pswd = []
+    shll = []
+
+    for row in df.iterrows():
+        matrix.append(row)
+
+    range_lenth = len(matrix)
+
+    for i in range(0,range_lenth):
+        username.append(matrix[i][1][0])
+        uid.append(str(matrix[i][1][1]))
+        #encrypting password
+        pswd.append(crypt.crypt(matrix[i][1][2], crypt.mksalt(crypt.METHOD_SHA512)))
+        shll.append(matrix[i][1][3])
+
+    global entryb1
+    pwd = entryb1.get()
+
+    for i in range(0,range_lenth):
+        cmd1 = "echo \""+pwd+"\" | sudo -S groupadd -g \""+uid[i]+"\" \""+username[i]+"\""
+        print(cmd1)
+        cmd2 = "sudo useradd -m \""+username[i]+"\" -p \""+pswd[i]+"\" -u \""+uid[i]+"\" -g \""+uid[i]+"\" -s \""+shll[i]+"\""
+        print(cmd2)
+        subprocess.call(cmd1, shell=True)
+        subprocess.call(cmd2, shell=True)
+        messageBox.showinfo("Add Users", "Successfully Added")
+
+
+# on change dropdown value
+def change_dropdown2(*args):
+    print( new_shell.get() )
+
+
+# link function to change dropdown
+new_shell.trace('w', change_dropdown2)
+
+
+def addSingleUser():
+    global entryb1
+    pwd = entryb1.get()
+
+    if pwd != '':
+        user_name = new_name.get()
+        user_pwd = crypt.crypt(str(new_pwd), crypt.mksalt(crypt.METHOD_SHA512))
+        user_id = new_uid.get()
+        user_shell = new_shell.get()
+        print(user_name,user_pwd,user_id,user_shell)
+
+        if user_name != '' or  user_pwd != '' or user_id != '' or user_shell != '':
+            cmd1 = "echo \""+pwd+"\" | sudo -S groupadd -g \""+user_id+"\" \""+user_name+"\""
+            cmd2 = "sudo useradd -m \""+user_name+"\" -p \""+user_pwd+"\" -u \""+user_id+"\" -g \""+user_id+"\" -s \""+user_shell+"\""
+            print(cmd1)
+            print(cmd2)
+            subprocess.call(cmd1, shell=True)
+            subprocess.call(cmd2, shell=True)
+            messageBox.showinfo("Add User", "Successfully Added")
+        else:
+            messageBox.showwarning("WARNING", "Fill User Details")
+
+    else:
+        messageBox.showwarning("WARNING", "Login Required")
+
+
 userLabel = Label(seventhframe,bd=4, text = "User Name", relief = RIDGE, pady=3)
 userLabel.place(x = 270, y = 70, width=230)
 userEntry = Entry(seventhframe, textvariable=new_name, bd=4)
@@ -476,13 +569,17 @@ pwdEntry = Entry(seventhframe, textvariable=new_pwd,show = "*", bd=4)
 pwdEntry.place(x = 500, y = 115, width=230)
 uidLabel = Label(seventhframe,bd=4, text = "User ID", relief = RIDGE, pady=3)
 uidLabel.place(x = 270, y = 160, width=230)
-uidEntry = Entry(seventhframe, textvariable=new_uid,show = "*", bd=4)
+uidEntry = Entry(seventhframe, textvariable=new_uid, bd=4)
 uidEntry.place(x = 500, y = 160, width=230)
 shellLabel = Label(seventhframe,bd=4, text = "User's login shell", relief = RIDGE, pady=3)
 shellLabel.place(x = 270, y = 205, width=230)
-shellEntry = Entry(seventhframe, textvariable=new_shell,show = "*", bd=4)
-shellEntry.place(x = 500, y = 205, width=230)
-Button8 = Button(seventhframe, text="Create", fg="black", bg="white", bd=3)
+# shellEntry = Entry(seventhframe, textvariable=new_shell, bd=4)
+# shellEntry.place(x = 500, y = 205, width=230)
+new_shell.set('-Select-')
+choices2 = {'/bin/bash','/bin/sh'}
+DropDown2 = OptionMenu(seventhframe, new_shell, *choices2)
+DropDown2.place(x = 500, y = 205, width=220)
+Button8 = Button(seventhframe, text="Create", fg="black", bg="white", bd=3, command=addSingleUser)
 Button8.place(x = 450, y = 250, width=100)
 
 #####################################################
