@@ -854,11 +854,27 @@ eightFrameLable2 = Label(eightFrame, image=batch_pic).pack(side="left")
 eightFrameLabel = Label(tab3, text="Batch Mode:  CREATE USER", justify=LEFT, relief = SUNKEN, pady=6, bg="old lace", bd = 4)
 eightFrameLabel.config(font=framelabelfont)
 eightFrameLabel.place(x=220,y=160,width=545, height=50)
-
 Button9 = Button(tab3, text="upload CSV", fg="black", bg="white", bd=3, command=uploadCSV)
 Button9.place(x=350,y=270)
 Button91 = Button(tab3, text="Create", fg="black", bg="white", bd=3, command=batchMode)
 Button91.place(x=500,y=270, width=100)
+
+tenthFrame = Frame(tab3, bg="steel blue", bd = 8, relief = RIDGE)
+tenthFrame.place(x = 30, y = 400, width=775, height=300)
+tenthFrameLable = Label(tenthFrame, text="Batch Mode Management Operations", justify=LEFT, relief = SUNKEN, pady=6, bg="old lace", bd = 4)
+tenthFrameLable.config(font=framelabelfont)
+tenthFrameLable.place(x=2,y=2,width=754, height=45)
+
+Btn101 = Button(tab3, text="Delete User", fg="white", bg="red2", bd=3).place(x = 60, y = 560, width=100)
+Btn102 = Button(tab3, text="Lock User", fg="white", bg="tomato", bd=3).place(x = 60, y = 630, width=100)
+Btn103 = Button(tab3, text="Update Username", fg="black", bg="white", bd=3).place(x = 180, y = 560, width=140)
+Btn104 = Button(tab3, text="Update Password", fg="black", bg="white", bd=3).place(x = 180, y = 630, width=140)
+Btn105 = Button(tab3, text="Update User's Shell", fg="black", bg="white", bd=3).place(x = 340, y = 560, width=160)
+Btn106 = Button(tab3, text="Set Expiry Date", fg="black", bg="white", bd=3).place(x = 340, y = 630, width=160)
+Btn107 = Button(tab3, text="Update UID", fg="black", bg="white", bd=3).place(x = 520, y = 560, width=100)
+Btn108 = Button(tab3, text="Update GID", fg="black", bg="white", bd=3).place(x = 520, y = 630, width=100)
+Btn109 = Button(tab3, text="Change Home Dir", fg="black", bg="white", bd=3).place(x = 640, y = 560, width=140)
+Btn110 = Button(tab3, text="Unlock User", fg="black", bg="pale green", bd=3).place(x = 640, y = 630, width=140)
 
 #####################################################
 root.minsize(845, 750)
