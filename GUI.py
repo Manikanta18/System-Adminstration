@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import ttk,filedialog
 from tkinter.colorchooser import *
 import tkinter.messagebox as messageBox
+from tkinter import simpledialog
 import subprocess
 import os
 import pandas as pd
@@ -521,6 +522,221 @@ def addSingleUser():
     else:
         messageBox.showwarning("WARNING", "Login Required")
 
+
+#delete User
+def del_user():
+    global entryb1
+    pwd = entryb1.get()
+    print("pwd :"+pwd)
+    if pwd != "":
+        username = simpledialog.askstring("Delete USER","Enter Username ",parent=tab2)
+
+        if username != "":
+            cmd1 = "echo \""+pwd+"\" | sudo -S userdel -r \""+username+"\""
+            print(cmd1)
+            subprocess.call(cmd1, shell=True)
+            messageBox.showinfo("Delete User", "Successfully Deleted")
+            print("done")
+        else:
+            messageBox.showwarning("WARNING", "Enter Username")
+    else:
+        messageBox.showwarning("WARNING", "Login Required")
+
+
+#lock User
+def lock_user():
+    global entryb1
+    pwd = entryb1.get()
+    print("pwd :"+pwd)
+    if pwd != "":
+        username = simpledialog.askstring("Lock USER","Enter Username ",parent=tab2)
+
+        if username != "":
+            cmd1 = "echo \""+pwd+"\" | sudo -S usermod -L \""+username+"\""
+            print(cmd1)
+            subprocess.call(cmd1, shell=True)
+            messageBox.showinfo("Lock User", "Successfully Locked")
+            print("done")
+        else:
+            messageBox.showwarning("WARNING", "Enter Username")
+    else:
+        messageBox.showwarning("WARNING", "Login Required")
+
+
+#unlock User
+def unlock_user():
+    global entryb1
+    pwd = entryb1.get()
+    print("pwd :"+pwd)
+    if pwd != "":
+        username = simpledialog.askstring("Unlock USER","Enter Username ",parent=tab2)
+
+        if username != "":
+            cmd1 = "echo \""+pwd+"\" | sudo -S usermod --unlock \""+username+"\""
+            print(cmd1)
+            subprocess.call(cmd1, shell=True)
+            messageBox.showinfo("Unlock User", "Successfully Unlocked")
+            print("done")
+        else:
+            messageBox.showwarning("WARNING", "Enter Username")
+    else:
+        messageBox.showwarning("WARNING", "Login Required")
+
+
+#update username
+def update_username():
+    global entryb1
+    pwd = entryb1.get()
+    print("pwd :"+pwd)
+    if pwd != "":
+        username = simpledialog.askstring("Update Username","Enter Username ",parent=tab2)
+        new_username = simpledialog.askstring("Update Username","Enter New Username ",parent=tab2)
+
+        if username != "":
+            cmd1 = "echo \""+pwd+"\" | sudo -S usermod -l \""+new_username+"\" \""+username+"\""
+            print(cmd1)
+            subprocess.call(cmd1, shell=True)
+            messageBox.showinfo("Update Username", "Successfully Updated Username")
+            print("done")
+        else:
+            messageBox.showwarning("WARNING", "Enter Username")
+    else:
+        messageBox.showwarning("WARNING", "Login Required")
+
+
+#update user's Shell
+def update_usershell():
+    global entryb1
+    pwd = entryb1.get()
+    print("pwd :"+pwd)
+    if pwd != "":
+        username = simpledialog.askstring("Update user's shell","Enter Username ",parent=tab2)
+        user_sh = simpledialog.askstring("Update user's shell","Enter new Usershell ",parent=tab2)
+
+        if username != "":
+            cmd1 = "echo \""+pwd+"\" | sudo -S usermod -s \""+user_sh+"\" \""+username+"\""
+            print(cmd1)
+            subprocess.call(cmd1, shell=True)
+            messageBox.showinfo("Update User's Shell", "Successfully Updated User's Shell")
+            print("done")
+        else:
+            messageBox.showwarning("WARNING", "Enter User's shell")
+    else:
+        messageBox.showwarning("WARNING", "Login Required")
+
+
+#update user's uid
+def update_userUID():
+    global entryb1
+    pwd = entryb1.get()
+    print("pwd :"+pwd)
+    if pwd != "":
+        username = simpledialog.askstring("Update user's UID","Enter Username ",parent=tab2)
+        user_uid = simpledialog.askstring("Update user's UID","Enter new UID ",parent=tab2)
+
+        if username != "":
+            cmd1 = "echo \""+pwd+"\" | sudo -S usermod -u \""+user_uid+"\" \""+username+"\""
+            print(cmd1)
+            subprocess.call(cmd1, shell=True)
+            messageBox.showinfo("Update User's UID", "Successfully Updated User's UID")
+            print("done")
+        else:
+            messageBox.showwarning("WARNING", "Enter User's UID")
+    else:
+        messageBox.showwarning("WARNING", "Login Required")
+
+
+#update user's gid
+def update_userGID():
+    global entryb1
+    pwd = entryb1.get()
+    print("pwd :"+pwd)
+    if pwd != "":
+        username = simpledialog.askstring("Update user's GID","Enter Username ",parent=tab2)
+        user_gid = simpledialog.askstring("Update user's GID","Enter new GID ",parent=tab2)
+
+        if username != "":
+            cmd1 = "echo \""+pwd+"\" | sudo -S groupmod -g \""+user_gid+"\" \""+username+"\""
+            cmd2 = "echo \""+pwd+"\" | sudo -S usermod -g \""+user_gid+"\" \""+username+"\""
+            print(cmd2)
+            print(cmd1)
+            subprocess.call(cmd1, shell=True)
+            subprocess.call(cmd2, shell=True)
+            messageBox.showinfo("Update User's GID", "Successfully Updated User's GID")
+            print("done")
+        else:
+            messageBox.showwarning("WARNING", "Enter User's GID")
+    else:
+        messageBox.showwarning("WARNING", "Login Required")
+
+
+#update user's homedir
+def update_homedir():
+    global entryb1
+    pwd = entryb1.get()
+    print("pwd :"+pwd)
+    if pwd != "":
+        username = simpledialog.askstring("Update user's Home Dir","Enter Username ",parent=tab2)
+        user_dir = simpledialog.askstring("Update user's Home Dir","Enter new User's Home Dir ",parent=tab2)
+
+        if username != "":
+            cmd1 = "echo \""+pwd+"\" | sudo -S mkdir -p \""+user_dir+"\""
+            cmd2 = "echo \""+pwd+"\" | sudo -S usermod -d \""+user_dir+"\" \""+username+"\""
+            print(cmd2)
+            print(cmd1)
+            subprocess.call(cmd1, shell=True)
+            subprocess.call(cmd2, shell=True)
+            messageBox.showinfo("Update User's Home Dir", "Successfully Updated User's Home Dir")
+            print("done")
+        else:
+            messageBox.showwarning("WARNING", "Enter User's Home Dir")
+    else:
+        messageBox.showwarning("WARNING", "Login Required")
+
+
+#set Expiry Date
+def setExd():
+    global entryb1
+    pwd = entryb1.get()
+    print("pwd :"+pwd)
+    if pwd != "":
+        username = simpledialog.askstring("Set Expiry Date","Enter Username ",parent=tab2)
+        user_exd = simpledialog.askstring("Set Expiry Date","Enter Expiry Date ",parent=tab2)
+
+        if username != "":
+            cmd = "echo \""+pwd+"\" | sudo -S usermod -e \""+user_exd+"\" \""+username+"\""
+            print(cmd)
+            subprocess.call(cmd, shell=True)
+            messageBox.showinfo("et Expiry Date", "Successfully Updated Expiry Date")
+            print("done")
+        else:
+            messageBox.showwarning("WARNING", "Enter Expiry Date")
+    else:
+        messageBox.showwarning("WARNING", "Login Required")
+
+
+#Change Password
+def setPwd():
+    global entryb1
+    pwd = entryb1.get()
+    print("pwd :"+pwd)
+    if pwd != "":
+        username = simpledialog.askstring("Change Password","Enter Username ",parent=tab2)
+        user_pxd = simpledialog.askstring("Change Password","Enter Password ",parent=tab2)
+        e_pwd = crypt.crypt(str(user_pxd), crypt.mksalt(crypt.METHOD_SHA512))
+
+        if username != "":
+            cmd = "echo \""+pwd+"\" | sudo -S usermod -p \""+e_pwd+"\" \""+username+"\""
+            print(cmd)
+            subprocess.call(cmd, shell=True)
+            messageBox.showinfo("Change Password", "Successfully Updated Expiry Date")
+            print("done")
+        else:
+            messageBox.showwarning("WARNING", "Enter Password")
+    else:
+        messageBox.showwarning("WARNING", "Login Required")
+
+
 #single User
 seventhFrame = Frame(tab2, bg="steel blue", bd = 8, relief = RIDGE)
 seventhFrame.place(x = 30, y = 150, width=775, height=300)
@@ -557,16 +773,16 @@ ninthFrame.place(x = 30, y = 480, width=775, height=220)
 ninthFrameLabel = Label(tab2, text="Single User Management Operations", justify=LEFT, relief = SUNKEN, pady=6, bg="old lace", bd = 4)
 ninthFrameLabel.place(x=40,y=490,width=754, height=45)
 
-Btn81 = Button(tab2, text="Delete User", fg="white", bg="red2", bd=3).place(x = 60, y = 560, width=100)
-Btn82 = Button(tab2, text="Disable User", fg="white", bg="tomato", bd=3).place(x = 60, y = 630, width=100)
-Btn83 = Button(tab2, text="Update Username", fg="black", bg="white", bd=3).place(x = 180, y = 560, width=140)
-Btn84 = Button(tab2, text="Update Password", fg="black", bg="white", bd=3).place(x = 180, y = 630, width=140)
-Btn85 = Button(tab2, text="Update User's Shell", fg="black", bg="white", bd=3).place(x = 340, y = 560, width=160)
-Btn86 = Button(tab2, text="Set Expiry Date", fg="black", bg="white", bd=3).place(x = 340, y = 630, width=160)
-Btn87 = Button(tab2, text="Update UID", fg="black", bg="white", bd=3).place(x = 520, y = 560, width=100)
-Btn88 = Button(tab2, text="Update GID", fg="black", bg="white", bd=3).place(x = 520, y = 630, width=100)
-Btn89 = Button(tab2, text="Change Home Dir", fg="black", bg="white", bd=3).place(x = 640, y = 560, width=140)
-Btn810 = Button(tab2, text="Enable User", fg="black", bg="pale green", bd=3).place(x = 640, y = 630, width=140)
+Btn81 = Button(tab2, text="Delete User", fg="white", bg="red2", bd=3,command=del_user).place(x = 60, y = 560, width=100)
+Btn82 = Button(tab2, text="Lock User", fg="white", bg="tomato", bd=3, command=lock_user).place(x = 60, y = 630, width=100)
+Btn83 = Button(tab2, text="Update Username", fg="black", bg="white", bd=3, command=update_username).place(x = 180, y = 560, width=140)
+Btn84 = Button(tab2, text="Update Password", fg="black", bg="white", bd=3, command=setPwd).place(x = 180, y = 630, width=140)
+Btn85 = Button(tab2, text="Update User's Shell", fg="black", bg="white", bd=3, command=update_usershell).place(x = 340, y = 560, width=160)
+Btn86 = Button(tab2, text="Set Expiry Date", fg="black", bg="white", bd=3,command=setExd).place(x = 340, y = 630, width=160)
+Btn87 = Button(tab2, text="Update UID", fg="black", bg="white", bd=3,command=update_userUID).place(x = 520, y = 560, width=100)
+Btn88 = Button(tab2, text="Update GID", fg="black", bg="white", bd=3,command=update_userGID).place(x = 520, y = 630, width=100)
+Btn89 = Button(tab2, text="Change Home Dir", fg="black", bg="white", bd=3,command=update_homedir).place(x = 640, y = 560, width=140)
+Btn810 = Button(tab2, text="Unlock User", fg="black", bg="pale green", bd=3, command=unlock_user).place(x = 640, y = 630, width=140)
 
 
 ############## Assignment 4 part2 ########################
@@ -586,7 +802,7 @@ def uploadCSV():
     global csv_filename
     csv_filename =  filedialog.askopenfilename(initialdir = "/home",title = "Select Picture",filetypes = (("CSV files","*.csv"),("all files","*.*")))
     print(csv_filename)
-    if csv_filename!= "":
+    if str(csv_filename) != "":
         messageBox.showinfo("Add csv", "Successfully Added")
     else:
         messageBox.showwarning("WARNING", "upload csv file required")
@@ -617,6 +833,7 @@ def batchMode():
 
     global entryb1
     pwd = entryb1.get()
+
     if pwd != '':
         for i in range(0,range_lenth):
             cmd1 = "echo \""+pwd+"\" | sudo -S groupadd -g \""+uid[i]+"\" \""+username[i]+"\""
