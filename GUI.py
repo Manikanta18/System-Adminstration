@@ -503,7 +503,8 @@ def addSingleUser():
 
     if pwd != '':
         user_name = new_name.get()
-        user_pwd = crypt.crypt(str(new_pwd), crypt.mksalt(crypt.METHOD_SHA512))
+        user_pwd = crypt.crypt(str(new_pwd.get()), crypt.mksalt(crypt.METHOD_SHA512))
+        # user_pwd = new_pwd.get()
         user_id = new_uid.get()
         user_shell = new_shell.get()
         print(user_name,user_pwd,user_id,user_shell)
@@ -707,7 +708,7 @@ def setExd():
             cmd = "echo \""+pwd+"\" | sudo -S usermod -e \""+user_exd+"\" \""+username+"\""
             print(cmd)
             subprocess.call(cmd, shell=True)
-            messageBox.showinfo("et Expiry Date", "Successfully Updated Expiry Date")
+            messageBox.showinfo("Set Expiry Date", "Successfully Updated Expiry Date")
             print("done")
         else:
             messageBox.showwarning("WARNING", "Enter Expiry Date")
@@ -800,7 +801,7 @@ csv_filename =""
 
 def uploadCSV():
     global csv_filename
-    csv_filename =  filedialog.askopenfilename(initialdir = "/home",title = "Select Picture",filetypes = (("CSV files","*.csv"),("all files","*.*")))
+    csv_filename =  filedialog.askopenfilename(initialdir = "/home",title = "Select CSV",filetypes = (("CSV files","*.csv"),("all files","*.*")))
     print(csv_filename)
     if str(csv_filename) != "":
         messageBox.showinfo("Add csv", "Successfully Added")
@@ -828,7 +829,7 @@ def batchMode():
         username.append(matrix[i][1][0])
         uid.append(str(matrix[i][1][1]))
         #encrypting password
-        pswd.append(crypt.crypt(matrix[i][1][2], crypt.mksalt(crypt.METHOD_SHA512)))
+        pswd.append(crypt.crypt(str(matrix[i][1][2]), crypt.mksalt(crypt.METHOD_SHA512)))
         shll.append(matrix[i][1][3])
 
     global entryb1
@@ -843,6 +844,357 @@ def batchMode():
             subprocess.call(cmd1, shell=True)
             subprocess.call(cmd2, shell=True)
         messageBox.showinfo("Add Users", "Successfully Added")
+    else:
+        messageBox.showwarning("WARNING", "Login Required")
+
+
+#delete User
+def del_users_batch():
+    global entryb1
+    pwd = entryb1.get()
+    print("pwd :"+pwd)
+
+    if pwd != '':
+        userdel_file =  filedialog.askopenfilename(initialdir = "/home",title = "Select CSV",filetypes = (("CSV files","*.csv"),("all files","*.*")))
+
+        data = pd.read_csv(userdel_file)
+        df = pd.DataFrame(data)
+
+        matrix =[]
+        username = []
+
+        for row in df.iterrows():
+            matrix.append(row)
+
+        range_lenth = len(matrix)
+
+        for i in range(0,range_lenth):
+            username.append(matrix[i][1][0])
+
+        for i in range(0,range_lenth):
+            cmd = "echo \""+pwd+"\" | sudo -S userdel -r \""+username[i]+"\""
+            print(cmd)
+            subprocess.call(cmd, shell=True)
+        print("done")
+        messageBox.showinfo("Delete Users", "Successfully deleted Users")
+    else:
+        messageBox.showwarning("WARNING", "Login Required")
+
+
+#lock User
+def lock_users_batch():
+    global entryb1
+    pwd = entryb1.get()
+    print("pwd :"+pwd)
+
+    if pwd != '':
+        userlock_file =  filedialog.askopenfilename(initialdir = "/home",title = "Select CSV",filetypes = (("CSV files","*.csv"),("all files","*.*")))
+
+        data = pd.read_csv(userlock_file)
+        df = pd.DataFrame(data)
+
+        matrix =[]
+        username = []
+
+        for row in df.iterrows():
+            matrix.append(row)
+
+        range_lenth = len(matrix)
+
+        for i in range(0,range_lenth):
+            username.append(matrix[i][1][0])
+
+        for i in range(0,range_lenth):
+            cmd = "echo \""+pwd+"\" | sudo -S usermod -L \""+username[i]+"\""
+            print(cmd)
+            subprocess.call(cmd, shell=True)
+        print("done")
+        messageBox.showinfo("Lock Users", "Successfully Locked Users")
+    else:
+        messageBox.showwarning("WARNING", "Login Required")
+
+
+#unlock User
+def unlock_user_batch():
+    global entryb1
+    pwd = entryb1.get()
+    print("pwd :"+pwd)
+
+    if pwd != '':
+        userunlock_file =  filedialog.askopenfilename(initialdir = "/home",title = "Select CSV",filetypes = (("CSV files","*.csv"),("all files","*.*")))
+
+        data = pd.read_csv(userunlock_file)
+        df = pd.DataFrame(data)
+
+        matrix =[]
+        username = []
+
+        for row in df.iterrows():
+            matrix.append(row)
+
+        range_lenth = len(matrix)
+
+        for i in range(0,range_lenth):
+            username.append(matrix[i][1][0])
+
+        for i in range(0,range_lenth):
+            cmd = "echo \""+pwd+"\" | sudo -S usermod --unlock \""+username[i]+"\""
+            print(cmd)
+            subprocess.call(cmd, shell=True)
+        print("done")
+        messageBox.showinfo("Unock Users", "Successfully unlocked Users")
+    else:
+        messageBox.showwarning("WARNING", "Login Required")
+
+
+#update username
+def update_username_batch():
+    global entryb1
+    pwd = entryb1.get()
+    print("pwd :"+pwd)
+
+    if pwd != '':
+        userdel_file =  filedialog.askopenfilename(initialdir = "/home",title = "Select CSV",filetypes = (("CSV files","*.csv"),("all files","*.*")))
+
+        data = pd.read_csv(userdel_file)
+        df = pd.DataFrame(data)
+
+        matrix =[]
+        username = []
+        update_name = []
+
+        for row in df.iterrows():
+            matrix.append(row)
+
+        range_lenth = len(matrix)
+
+        for i in range(0,range_lenth):
+            username.append(matrix[i][1][0])
+            update_name.append(str(matrix[i][1][1]))
+
+        for i in range(0,range_lenth):
+            cmd = "echo \""+pwd+"\" | sudo -S usermod -l \""+update_name[i]+"\" \""+username[i]+"\""
+            print(cmd)
+            subprocess.call(cmd, shell=True)
+        print("done")
+        messageBox.showinfo("Update Usernames", "Successfully Updated Usernames")
+    else:
+        messageBox.showwarning("WARNING", "Login Required")
+
+
+#update user's Shell
+def update_usershell_batch():
+    global entryb1
+    pwd = entryb1.get()
+    print("pwd :"+pwd)
+
+    if pwd != "":
+        usershl_file =  filedialog.askopenfilename(initialdir = "/home",title = "Select CSV",filetypes = (("CSV files","*.csv"),("all files","*.*")))
+
+        data = pd.read_csv(usershl_file)
+        df = pd.DataFrame(data)
+
+        matrix =[]
+        username = []
+        update_shell = []
+
+        for row in df.iterrows():
+            matrix.append(row)
+
+        range_lenth = len(matrix)
+
+        for i in range(0,range_lenth):
+            username.append(matrix[i][1][0])
+            update_shell.append(str(matrix[i][1][1]))
+
+        for i in range(0,range_lenth):
+            cmd = "echo \""+pwd+"\" | sudo -S usermod -s \""+update_shell[i]+"\" \""+username[i]+"\""
+            print(cmd)
+            subprocess.call(cmd, shell=True)
+        print("done")
+        messageBox.showinfo("Update User's Shells", "Successfully Updated User's Shells")
+    else:
+        messageBox.showwarning("WARNING", "Login Required")
+
+
+#update user's uid
+def update_userUID_batch():
+    global entryb1
+    pwd = entryb1.get()
+    print("pwd :"+pwd)
+
+    if pwd != "":
+        useruid_file =  filedialog.askopenfilename(initialdir = "/home",title = "Select CSV",filetypes = (("CSV files","*.csv"),("all files","*.*")))
+
+        data = pd.read_csv(useruid_file)
+        df = pd.DataFrame(data)
+
+        matrix =[]
+        username = []
+        update_uid = []
+
+        for row in df.iterrows():
+            matrix.append(row)
+
+        range_lenth = len(matrix)
+
+        for i in range(0,range_lenth):
+            username.append(matrix[i][1][0])
+            update_uid.append(str(matrix[i][1][1]))
+
+        for i in range(0,range_lenth):
+            cmd = "echo \""+pwd+"\" | sudo -S usermod -u \""+update_uid[i]+"\" \""+username[i]+"\""
+            print(cmd)
+            subprocess.call(cmd, shell=True)
+        print("done")
+        messageBox.showinfo("Update User's UIDs", "Successfully Updated User's UIDs")
+    else:
+        messageBox.showwarning("WARNING", "Login Required")
+
+
+#update user's gid
+def update_userGID_batch():
+    global entryb1
+    pwd = entryb1.get()
+    print("pwd :"+pwd)
+
+    if pwd != "":
+        usergid_file =  filedialog.askopenfilename(initialdir = "/home",title = "Select CSV",filetypes = (("CSV files","*.csv"),("all files","*.*")))
+
+        data = pd.read_csv(usergid_file)
+        df = pd.DataFrame(data)
+
+        matrix =[]
+        username = []
+        update_gid = []
+
+        for row in df.iterrows():
+            matrix.append(row)
+
+        range_lenth = len(matrix)
+
+        for i in range(0,range_lenth):
+            username.append(matrix[i][1][0])
+            update_gid.append(str(matrix[i][1][1]))
+
+        for i in range(0,range_lenth):
+            cmd1 = "echo \""+pwd+"\" | sudo -S groupmod -g \""+update_gid[i]+"\" \""+username[i]+"\""
+            cmd2 = "echo \""+pwd+"\" | sudo -S usermod -g \""+update_gid[i]+"\" \""+username[i]+"\""
+            print(cmd1)
+            print(cmd2)
+            subprocess.call(cmd1, shell=True)
+            subprocess.call(cmd2, shell=True)
+        print("done")
+        messageBox.showinfo("Update User's GIDs", "Successfully Updated User's GIDs")
+    else:
+        messageBox.showwarning("WARNING", "Login Required")
+
+
+#update user's homedir
+def update_homedir_batch():
+    global entryb1
+    pwd = entryb1.get()
+    print("pwd :"+pwd)
+
+    if pwd != "":
+        userdir_file =  filedialog.askopenfilename(initialdir = "/home",title = "Select CSV",filetypes = (("CSV files","*.csv"),("all files","*.*")))
+
+        data = pd.read_csv(userdir_file)
+        df = pd.DataFrame(data)
+
+        matrix =[]
+        username = []
+        update_dir = []
+
+        for row in df.iterrows():
+            matrix.append(row)
+
+        range_lenth = len(matrix)
+
+        for i in range(0,range_lenth):
+            username.append(matrix[i][1][0])
+            update_dir.append(str(matrix[i][1][1]))
+
+        for i in range(0,range_lenth):
+            cmd1 = "echo \""+pwd+"\" | sudo -S mkdir -p \""+update_dir[i]+"\""
+            cmd2 = "echo \""+pwd+"\" | sudo -S usermod -d \""+update_dir[i]+"\" \""+username[i]+"\""
+            print(cmd1)
+            print(cmd2)
+            subprocess.call(cmd1, shell=True)
+            subprocess.call(cmd2, shell=True)
+        print("done")
+        messageBox.showinfo("Update User's Home Dirs", "Successfully Updated User's Home Dirs")
+    else:
+        messageBox.showwarning("WARNING", "Login Required")
+
+
+#set Expiry Date
+def setExd_batch():
+    global entryb1
+    pwd = entryb1.get()
+    print("pwd :"+pwd)
+
+    if pwd != '':
+        userex_file =  filedialog.askopenfilename(initialdir = "/home",title = "Select CSV",filetypes = (("CSV files","*.csv"),("all files","*.*")))
+
+        data = pd.read_csv(userex_file)
+        df = pd.DataFrame(data)
+
+        matrix =[]
+        username = []
+        set_ex = []
+
+        for row in df.iterrows():
+            matrix.append(row)
+
+        range_lenth = len(matrix)
+
+        for i in range(0,range_lenth):
+            username.append(matrix[i][1][0])
+            set_ex.append(str(matrix[i][1][1]))
+
+        for i in range(0,range_lenth):
+            cmd = "echo \""+pwd+"\" | sudo -S usermod -e \""+set_ex[i]+"\" \""+username[i]+"\""
+            print(cmd)
+            subprocess.call(cmd, shell=True)
+        print("done")
+        messageBox.showinfo("Set Expiry Date", "Successfully Updated Expiry Dates")
+    else:
+        messageBox.showwarning("WARNING", "Login Required")
+
+
+#Change Password
+def setPwd_batch():
+    global entryb1
+    pwd = entryb1.get()
+    print("pwd :"+pwd)
+
+    if pwd != '':
+        userpwd_file =  filedialog.askopenfilename(initialdir = "/home",title = "Select CSV",filetypes = (("CSV files","*.csv"),("all files","*.*")))
+
+        data = pd.read_csv(userpwd_file)
+        df = pd.DataFrame(data)
+
+        matrix =[]
+        username = []
+        set_pwd = []
+
+        for row in df.iterrows():
+            matrix.append(row)
+
+        range_lenth = len(matrix)
+
+        for i in range(0,range_lenth):
+            username.append(matrix[i][1][0])
+            print(matrix[i][1][0])
+            set_pwd.append(crypt.crypt(str(matrix[i][1][1]), crypt.mksalt(crypt.METHOD_SHA512)))
+
+        for i in range(0,range_lenth):
+            cmd = "echo \""+pwd+"\" | sudo -S usermod -p \""+set_pwd[i]+"\" \""+username[i]+"\""
+            print(cmd)
+            subprocess.call(cmd, shell=True)
+        print("done")
+        messageBox.showinfo("Update Password", "Successfully Updated Passwords")
     else:
         messageBox.showwarning("WARNING", "Login Required")
 
@@ -865,16 +1217,16 @@ tenthFrameLable = Label(tenthFrame, text="Batch Mode Management Operations", jus
 tenthFrameLable.config(font=framelabelfont)
 tenthFrameLable.place(x=2,y=2,width=754, height=45)
 
-Btn101 = Button(tab3, text="Delete User", fg="white", bg="red2", bd=3).place(x = 60, y = 560, width=100)
-Btn102 = Button(tab3, text="Lock User", fg="white", bg="tomato", bd=3).place(x = 60, y = 630, width=100)
-Btn103 = Button(tab3, text="Update Username", fg="black", bg="white", bd=3).place(x = 180, y = 560, width=140)
-Btn104 = Button(tab3, text="Update Password", fg="black", bg="white", bd=3).place(x = 180, y = 630, width=140)
-Btn105 = Button(tab3, text="Update User's Shell", fg="black", bg="white", bd=3).place(x = 340, y = 560, width=160)
-Btn106 = Button(tab3, text="Set Expiry Date", fg="black", bg="white", bd=3).place(x = 340, y = 630, width=160)
-Btn107 = Button(tab3, text="Update UID", fg="black", bg="white", bd=3).place(x = 520, y = 560, width=100)
-Btn108 = Button(tab3, text="Update GID", fg="black", bg="white", bd=3).place(x = 520, y = 630, width=100)
-Btn109 = Button(tab3, text="Change Home Dir", fg="black", bg="white", bd=3).place(x = 640, y = 560, width=140)
-Btn110 = Button(tab3, text="Unlock User", fg="black", bg="pale green", bd=3).place(x = 640, y = 630, width=140)
+Btn101 = Button(tab3, text="Delete User", fg="white", bg="red2", bd=3, command=del_users_batch).place(x = 60, y = 560, width=100)
+Btn102 = Button(tab3, text="Lock User", fg="white", bg="tomato", bd=3, command=lock_users_batch).place(x = 60, y = 630, width=100)
+Btn103 = Button(tab3, text="Update Username", fg="black", bg="white", bd=3,command=update_username_batch).place(x = 180, y = 560, width=140)
+Btn104 = Button(tab3, text="Update Password", fg="black", bg="white", bd=3, command=setPwd_batch).place(x = 180, y = 630, width=140)
+Btn105 = Button(tab3, text="Update User's Shell", fg="black", bg="white", bd=3,command=update_usershell_batch).place(x = 340, y = 560, width=160)
+Btn106 = Button(tab3, text="Set Expiry Date", fg="black", bg="white", bd=3, command=setExd_batch).place(x = 340, y = 630, width=160)
+Btn107 = Button(tab3, text="Update UID", fg="black", bg="white", bd=3, command=update_userUID_batch).place(x = 520, y = 560, width=100)
+Btn108 = Button(tab3, text="Update GID", fg="black", bg="white", bd=3, command=update_userGID_batch).place(x = 520, y = 630, width=100)
+Btn109 = Button(tab3, text="Change Home Dir", fg="black", bg="white", bd=3, command=update_homedir_batch).place(x = 640, y = 560, width=140)
+Btn110 = Button(tab3, text="Unlock User", fg="black", bg="pale green", bd=3, command=unlock_user_batch).place(x = 640, y = 630, width=140)
 
 #####################################################
 root.minsize(845, 750)
