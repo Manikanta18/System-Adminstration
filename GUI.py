@@ -23,6 +23,12 @@ tabControl.add(tab2, text='Assignment 4-SingleUser')
 tab3 = ttk.Frame(tabControl)
 tabControl.add(tab3, text='Assignment 4-BatchMode')
 
+tab4 = ttk.Frame(tabControl)
+tabControl.add(tab4, text='Assignment 5-1')
+
+tab5 = ttk.Frame(tabControl)
+tabControl.add(tab5, text='Assignment 5-2')
+
 tabControl.pack(expand=1, fill="both")
 
 #fonts
@@ -819,7 +825,7 @@ def batchMode():
     uid = []
     pswd = []
     shll = []
-
+    print(df)
     for row in df.iterrows():
         matrix.append(row)
 
@@ -1217,16 +1223,36 @@ tenthFrameLable = Label(tenthFrame, text="Batch Mode Management Operations", jus
 tenthFrameLable.config(font=framelabelfont)
 tenthFrameLable.place(x=2,y=2,width=754, height=45)
 
-Btn101 = Button(tab3, text="Delete User", fg="white", bg="red2", bd=3, command=del_users_batch).place(x = 60, y = 560, width=100)
-Btn102 = Button(tab3, text="Lock User", fg="white", bg="tomato", bd=3, command=lock_users_batch).place(x = 60, y = 630, width=100)
-Btn103 = Button(tab3, text="Update Username", fg="black", bg="white", bd=3,command=update_username_batch).place(x = 180, y = 560, width=140)
-Btn104 = Button(tab3, text="Update Password", fg="black", bg="white", bd=3, command=setPwd_batch).place(x = 180, y = 630, width=140)
-Btn105 = Button(tab3, text="Update User's Shell", fg="black", bg="white", bd=3,command=update_usershell_batch).place(x = 340, y = 560, width=160)
-Btn106 = Button(tab3, text="Set Expiry Date", fg="black", bg="white", bd=3, command=setExd_batch).place(x = 340, y = 630, width=160)
-Btn107 = Button(tab3, text="Update UID", fg="black", bg="white", bd=3, command=update_userUID_batch).place(x = 520, y = 560, width=100)
-Btn108 = Button(tab3, text="Update GID", fg="black", bg="white", bd=3, command=update_userGID_batch).place(x = 520, y = 630, width=100)
-Btn109 = Button(tab3, text="Change Home Dir", fg="black", bg="white", bd=3, command=update_homedir_batch).place(x = 640, y = 560, width=140)
-Btn110 = Button(tab3, text="Unlock User", fg="black", bg="pale green", bd=3, command=unlock_user_batch).place(x = 640, y = 630, width=140)
+Btn101 = Button(tab3, text="Delete User", fg="white", bg="red2", bd=3, command=del_users_batch).place(x = 60, y = 530, width=100)
+Btn102 = Button(tab3, text="Lock User", fg="white", bg="tomato", bd=3, command=lock_users_batch).place(x = 60, y = 610, width=100)
+Btn103 = Button(tab3, text="Update Username", fg="black", bg="white", bd=3,command=update_username_batch).place(x = 180, y = 530, width=140)
+Btn104 = Button(tab3, text="Update Password", fg="black", bg="white", bd=3, command=setPwd_batch).place(x = 180, y = 610, width=140)
+Btn105 = Button(tab3, text="Update User's Shell", fg="black", bg="white", bd=3,command=update_usershell_batch).place(x = 340, y = 530, width=160)
+Btn106 = Button(tab3, text="Set Expiry Date", fg="black", bg="white", bd=3, command=setExd_batch).place(x = 340, y = 610, width=160)
+Btn107 = Button(tab3, text="Update UID", fg="black", bg="white", bd=3, command=update_userUID_batch).place(x = 520, y = 530, width=100)
+Btn108 = Button(tab3, text="Update GID", fg="black", bg="white", bd=3, command=update_userGID_batch).place(x = 520, y = 610, width=100)
+Btn109 = Button(tab3, text="Change Home Dir", fg="black", bg="white", bd=3, command=update_homedir_batch).place(x = 640, y = 530, width=140)
+Btn110 = Button(tab3, text="Unlock User", fg="black", bg="pale green", bd=3, command=unlock_user_batch).place(x = 640, y = 610, width=140)
+
+############## Assignment 5 part 1 ########################
+
+#headFrame
+headFrame = Frame(tab4, bg="tan3", bd=8, relief = RIDGE)
+headFrame.place(x = 30, y = 60, width=775, height=50)
+headFrame_Label = Label(headFrame, text=" Assignment 5-1 ", relief = SUNKEN,bd = 4)
+headFrame_Label.config(font=headlabelfont)
+headFrame_Label.pack(expand=YES)
+
+
+
+############## Assignment 5 part 2 ########################
+
+#headFrame
+headFrame = Frame(tab5, bg="tan3", bd=8, relief = RIDGE)
+headFrame.place(x = 30, y = 60, width=775, height=50)
+headFrame_Label = Label(headFrame, text=" Assignment 5-2 ", relief = SUNKEN,bd = 4)
+headFrame_Label.config(font=headlabelfont)
+headFrame_Label.pack(expand=YES)
 
 #####################################################
 root.minsize(845, 750)
