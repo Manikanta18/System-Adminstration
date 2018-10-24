@@ -7,6 +7,8 @@ import subprocess
 import os
 import pandas as pd
 import crypt, getpass
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import matplotlib.pyplot as plt
 
 
 root = Tk()
@@ -15,19 +17,19 @@ root.configure(bg='light grey')
 tabControl = ttk.Notebook(root)
 
 tab1 = ttk.Frame(tabControl)
-tabControl.add(tab1, text='Assignment 3')
+tabControl.add(tab1, text='Booting and Shutting Down')
 
 tab2 = ttk.Frame(tabControl)
-tabControl.add(tab2, text='Assignment 4-SingleUser')
+tabControl.add(tab2, text='User Management- 1')
 
 tab3 = ttk.Frame(tabControl)
-tabControl.add(tab3, text='Assignment 4-BatchMode')
+tabControl.add(tab3, text='User Management- 2')
 
 tab4 = ttk.Frame(tabControl)
-tabControl.add(tab4, text='Assignment 5-1')
+tabControl.add(tab4, text= 'Controlling Processes')
 
 tab5 = ttk.Frame(tabControl)
-tabControl.add(tab5, text='Assignment 5-2')
+tabControl.add(tab5, text='Periodic Processes')
 
 tabControl.pack(expand=1, fill="both")
 
@@ -118,7 +120,7 @@ b1.place(x = 740, y = 38)
 #headFrame
 headFrame = Frame(tab1, bg="tan3", bd=8, relief = RIDGE)
 headFrame.place(x = 30, y = 60, width=775, height=50)
-headFrame_Label = Label(headFrame, text=" Assignment 3 ", relief = SUNKEN,bd = 4)
+headFrame_Label = Label(headFrame, text=" Booting and Shutting Down ", relief = SUNKEN,bd = 4)
 headFrame_Label.config(font=headlabelfont)
 headFrame_Label.pack(expand=YES)
 
@@ -489,7 +491,7 @@ Button6.pack(side=LEFT, anchor = SW)
 #headFrame
 headFrame2 = Frame(tab2, bg="tan3", bd=8, relief = RIDGE)
 headFrame2.place(x = 30, y = 60, width=775, height=50)
-headFrame_Label2 = Label(headFrame2, text=" Assignment 4 ", relief = SUNKEN,bd = 4)
+headFrame_Label2 = Label(headFrame2, text=" User Management- single User ", relief = SUNKEN,bd = 4)
 headFrame_Label2.config(font=headlabelfont)
 headFrame_Label2.pack(expand=YES)
 
@@ -798,7 +800,7 @@ Btn810 = Button(tab2, text="Unlock User", fg="black", bg="pale green", bd=3, com
 #headFrame
 headFrame3 = Frame(tab3, bg="tan3", bd=8, relief = RIDGE)
 headFrame3.place(x = 30, y = 60, width=775, height=50)
-headFrame_Label3 = Label(headFrame3, text=" Assignment 4 ", relief = SUNKEN,bd = 4)
+headFrame_Label3 = Label(headFrame3, text=" User Management- Batch Mode ", relief = SUNKEN,bd = 4)
 headFrame_Label3.config(font=headlabelfont)
 headFrame_Label3.pack(expand=YES)
 
@@ -1239,18 +1241,111 @@ Btn110 = Button(tab3, text="Unlock User", fg="black", bg="pale green", bd=3, com
 #headFrame
 headFrame = Frame(tab4, bg="tan3", bd=8, relief = RIDGE)
 headFrame.place(x = 30, y = 60, width=775, height=50)
-headFrame_Label = Label(headFrame, text=" Assignment 5-1 ", relief = SUNKEN,bd = 4)
+headFrame_Label = Label(headFrame, text=" Controlling Processes ", relief = SUNKEN,bd = 4)
 headFrame_Label.config(font=headlabelfont)
 headFrame_Label.pack(expand=YES)
 
+eleventhFrame = Frame(tab4, bg="steel blue", bd = 8, relief = RIDGE)
+eleventhFrame.place(x = 30, y = 150, width=370, height=500)
+eleventhFrameLabel = Label(tab4, text="CPU Usage", justify=LEFT, relief = SUNKEN, pady=5, bg="old lace", bd = 4)
+eleventhFrameLabel.config(font=framelabelfont)
+eleventhFrameLabel.place(x=40,y=160,width=350, height=50)
 
+twelvethFrame = Frame(tab4, bg="steel blue", bd = 8, relief = RIDGE)
+twelvethFrame.place(x = 435, y = 150, width=370, height=500)
+twelvethFrameLabel = Label(tab4, text="Memory Usage", justify=LEFT, relief = SUNKEN, pady=5, bg="old lace", bd = 4)
+twelvethFrameLabel.config(font=framelabelfont)
+twelvethFrameLabel.place(x=445,y=160,width=350, height=50)
+
+def cpu_update():
+    cwd = os.getcwd()
+    subprocess.call(cwd+'/getcpu.sh')
+
+    arr = []
+
+    f = open("newcpu.txt","r")
+    for ele in f:
+       if ele != "\n":
+           arr.append(ele.rstrip())
+       else:
+           arr.append(0)
+    f.close()
+
+    print(arr)
+
+    labels= []
+    values = []
+    explode = []
+    for i in range(0,len(arr)):
+        if i%2 == 0:
+            labels.append(arr[i])
+        else:
+            values.append(float(arr[i]))
+    labels.append("idle")
+    values.append(100-sum(values))
+
+    for i in range(0,len(labels)):
+        explode.append(0.05)
+
+    actualFigure = plt.figure(figsize = (5,5))
+
+    pie= plt.pie(values, labels=labels, explode = explode, shadow=True, autopct='%1.1f%%')
+    canvas = FigureCanvasTkAgg(actualFigure, master=tab4)
+    canvas.get_tk_widget().place(x=45,y=230, width=340, height=340)
+    canvas.show()
+
+
+def mem_update():
+    cwd = os.getcwd()
+    subprocess.call(cwd+'/getmem.sh')
+
+    arr = []
+
+    f = open("newmem.txt","r")
+    for ele in f:
+       if ele != "\n":
+           arr.append(ele.rstrip())
+       else:
+           arr.append(0)
+    f.close()
+
+    print(arr)
+
+    labels= []
+    values = []
+    explode = []
+    for i in range(0,len(arr)):
+        if i%2 == 0:
+            labels.append(arr[i])
+        else:
+            values.append(float(arr[i]))
+    labels.append("idle")
+    values.append(100-sum(values))
+
+    for i in range(0,len(labels)):
+        explode.append(0.05)
+
+    actualFigure = plt.figure(figsize = (8,8))
+
+    pie= plt.pie(values, labels=labels, explode = explode, shadow=True, autopct='%1.1f%%')
+    # plt.legend(pie[0], labels, loc="upper right")
+    canvas = FigureCanvasTkAgg(actualFigure, master=tab4)
+    canvas.get_tk_widget().place(x=450,y=230, width=340, height=340)
+    canvas.show()
+
+
+cpu_update()
+mem_update()
+
+btn11 = Button(tab4, text="Update", fg="black", bg="light grey", bd=3, command=cpu_update).place(x = 140 , y = 590, width=140)
+btn12 = Button(tab4, text="Update", fg="black", bg="light grey", bd=3, command=mem_update).place(x = 550 , y = 590, width=140)
 
 ############## Assignment 5 part 2 ########################
 
 #headFrame
 headFrame = Frame(tab5, bg="tan3", bd=8, relief = RIDGE)
 headFrame.place(x = 30, y = 60, width=775, height=50)
-headFrame_Label = Label(headFrame, text=" Assignment 5-2 ", relief = SUNKEN,bd = 4)
+headFrame_Label = Label(headFrame, text=" Periodic Processes ", relief = SUNKEN,bd = 4)
 headFrame_Label.config(font=headlabelfont)
 headFrame_Label.pack(expand=YES)
 
