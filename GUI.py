@@ -14,22 +14,64 @@ import matplotlib.pyplot as plt
 root = Tk()
 root.title("System Admin")
 root.configure(bg='light grey')
+
+style = ttk.Style()
+
+style.configure("TNotebook", background="light grey");
+style.map("TNotebook.Tab", background=[("selected", "steel blue")], foreground=[("selected", "white")]);
+style.configure("TNotebook.Tab", background="tan3", foreground="black");
+
 tabControl = ttk.Notebook(root)
 
 tab1 = ttk.Frame(tabControl)
-tabControl.add(tab1, text='Booting and Shutting Down')
+tabControl.add(tab1, text='Booting & Shutting Down')
 
 tab2 = ttk.Frame(tabControl)
-tabControl.add(tab2, text='User Management- 1')
+tabControl.add(tab2, text='User Management')
+
+subTabControl = ttk.Notebook(tab2)
+#sub tabs of tab2
+tab21 = ttk.Frame(subTabControl)
+subTabControl.add(tab21, text='Single User Management')
+
+tab22 = ttk.Frame(subTabControl)
+subTabControl.add(tab22, text='Batch User Management')
+
+subTabControl.pack(expand=1, fill="both")
+####
 
 tab3 = ttk.Frame(tabControl)
-tabControl.add(tab3, text='User Management- 2')
+tabControl.add(tab3, text='Controlling and periodic Processes')
 
-tab4 = ttk.Frame(tabControl)
-tabControl.add(tab4, text= 'Controlling Processes')
+subTabControl = ttk.Notebook(tab3)
+#sub tabs of tab2
+subtab1 = ttk.Frame(subTabControl)
+subTabControl.add(subtab1, text='Users Memory and CPU usage')
 
-tab5 = ttk.Frame(tabControl)
-tabControl.add(tab5, text='Periodic Processes')
+subtab2 = ttk.Frame(subTabControl)
+subTabControl.add(subtab2, text='Nice Values')
+
+subtab3 = ttk.Frame(subTabControl)
+subTabControl.add(subtab3, text='Cron Tester')
+
+subTabControl.pack(expand=1, fill="both")
+####
+
+# tab3 = ttk.Frame(tabControl)
+# tabControl.add(tab3, text= 'Controlling and periodic Processes ')
+# subTabControl2 = ttk.Notebook(tab3)
+# # sub tabs of tab3
+# tab31 = ttk.Frame(subTabControl2)
+# tabControl.add(tab31, text='Users')
+#
+# tab32 = ttk.Frame(subTabControl2)
+# tabControl.add(tab32, text='Nice Values')
+#
+# tab33 = ttk.Frame(subTabControl2)
+# tabControl.add(tab33, text='cron tester')
+#
+# subTabControl2.pack(expand=1, fill="both")
+####
 
 tabControl.pack(expand=1, fill="both")
 
@@ -96,15 +138,15 @@ new_shell = StringVar()
 
 #Login
 NLabel = Label(root,bd=4, text = "User Name", relief = RIDGE)
-NLabel.place(x = 190, y = 38)
+NLabel.place(x = 190, y = 55)
 Name = Entry(root, textvariable=name, bd=4)
-Name.place(x = 280, y = 38)
+Name.place(x = 280, y = 55)
 ELabel = Label(root,bd=4, text = "Password", relief = RIDGE)
-ELabel.place(x = 472, y = 38)
+ELabel.place(x = 472, y = 55)
 E = Entry(root, textvariable=entryb1,show = "*", bd=4)
-E.place(x = 550, y = 38)
+E.place(x = 550, y = 55)
 b1 = Button(root, text="Login",bd=3,command= lambda: hideThis(Name,E, NLabel,ELabel) if entryb1.get()!= '' and name.get() != '' else messageBox.showwarning("WARNING", "Enter Login Details") )
-b1.place(x = 740, y = 38)
+b1.place(x = 740, y = 55)
 
 # NLabel2 = Label(tab2,bd=4, text = "User Name", relief = RIDGE)
 # NLabel2.place(x = 190, y = 25)
@@ -119,7 +161,7 @@ b1.place(x = 740, y = 38)
 
 #headFrame
 headFrame = Frame(tab1, bg="tan3", bd=8, relief = RIDGE)
-headFrame.place(x = 30, y = 60, width=775, height=50)
+headFrame.place(x = 30, y = 75, width=775, height=50)
 headFrame_Label = Label(headFrame, text=" Booting and Shutting Down ", relief = SUNKEN,bd = 4)
 headFrame_Label.config(font=headlabelfont)
 headFrame_Label.pack(expand=YES)
@@ -139,7 +181,7 @@ def hideThis(Name,E,NLabel,ELabel):
     E.place_forget()
     b1.place_forget()
     newLabel = Label(root, text="Hi, "+user+" !",relief = RAISED,padx =10, pady=6,bd =4, bg="cyan3")
-    newLabel.place(x = 630, y = 38, width = 175)
+    newLabel.place(x = 630, y = 55, width = 175)
 
 
 # #After login
@@ -210,7 +252,7 @@ def change_dropdown(*args):
 os_name.trace('w', change_dropdown)
 
 firstFrame = Frame(tab1, bg="steel blue", bd = 8, relief = RIDGE)
-firstFrame.place(x = 30, y = 150, width=370, height=150)
+firstFrame.place(x = 30, y = 165, width=370, height=150)
 firstFrame_Label = Label(firstFrame, text=Question1, justify=LEFT, relief = SUNKEN, pady=6, bg="old lace", bd = 4)
 firstFrame_Label.config(font=framelabelfont)
 firstFrame_Label.place(width=260, height=70)
@@ -218,10 +260,10 @@ firstFrame_Label2 = Label(firstFrame, image=grub).pack(side="right")
 os_name.set('-Select-')
 choices = {'Ubuntu','Windows'}
 DropDown1 = OptionMenu(tab1, os_name, *choices)
-DropDown1.place(x=55,y=255)
+DropDown1.place(x=55,y=270)
 
 Button1 = Button(tab1, text="Change", fg="black", bg="snow", command=change_os, bd=3)
-Button1.place(x=170,y=255)
+Button1.place(x=170,y=270)
 
 #-----------------QUESTION2--------------------------------
 
@@ -244,17 +286,17 @@ def grub_time():
         messageBox.showwarning("WARNING", "Enter Time")
 
 secondFrame = Frame(tab1, bg="steel blue", bd = 8, relief = RIDGE)
-secondFrame.place(x = 435, y = 150, width=370, height=150)
+secondFrame.place(x = 435, y = 165, width=370, height=150)
 secondFrame_Label2 = Label(secondFrame, image=stop).pack(side="right")
 secondFrame_Label = Label(secondFrame, text=Question2, justify=LEFT, relief = SUNKEN, pady=6, bg="old lace", bd = 4)
 secondFrame_Label.config(font=framelabelfont)
 secondFrame_Label.place(width=260, height=70)
 
 TimeEntry = Entry(tab1, textvariable=time_value, bd=4, bg="light grey")
-TimeEntry.place(x = 470, y = 255, width=60, height=30)
+TimeEntry.place(x = 470, y = 270, width=60, height=30)
 
 Button2 = Button(tab1, text="Change", fg="black", bg="white", bd=3, command=grub_time)
-Button2.place(x=550,y=255)
+Button2.place(x=550,y=270)
 
 #-----------------QUESTION3--------------------------------
 
@@ -263,7 +305,7 @@ Button2.place(x=550,y=255)
 #rm -r temp
 
 thirdFrame = Frame(tab1, bg="steel blue", bd = 8, relief = RIDGE)
-thirdFrame.place(x = 30, y = 330 , width=370, height=150)
+thirdFrame.place(x = 30, y = 345 , width=370, height=150)
 thirdFrame_Label = Label(thirdFrame, text=Question3, justify=LEFT, relief = SUNKEN, pady=6, bg="old lace", bd = 4)
 thirdFrame_Label.config(font=framelabelfont)
 thirdFrame_Label.place(width=270, height=70)
@@ -352,16 +394,16 @@ def splash_logo():
         messageBox.showwarning("WARNING", "Image not selected")
 
 fourthFrame = Frame(tab1, bg="steel blue", bd = 8, relief = RIDGE)
-fourthFrame.place(x = 435, y = 330 , width=370, height=150)
+fourthFrame.place(x = 435, y = 345 , width=370, height=150)
 fourthFrame_Label2 = Label(fourthFrame, image=ubuntu).pack(side="right")
 fourthFrame_Label = Label(fourthFrame, text=Question4, justify=LEFT, relief = SUNKEN, pady=6, bg="old lace", bd = 4)
 fourthFrame_Label.config(font=framelabelfont)
 fourthFrame_Label.place(width=260, height=70)
 
 Button4 = Button(tab1, text="Splash screen", fg="black", bg="white", bd=3, command=splash_screen)
-Button4.place(x=470,y=435)
+Button4.place(x=470,y=450)
 Button41 = Button(tab1, text="Splash logo", fg="black", bg="white", bd=3, command=splash_logo)
-Button41.place(x=605,y=435)
+Button41.place(x=605,y=450)
 
 #-----------------QUESTION5--------------------------------
 
@@ -407,7 +449,7 @@ def read():
     popup.mainloop()
 
 fifthFrame = Frame(tab1, bg="steel blue", bd = 8, relief = RIDGE)
-fifthFrame.place(x = 30, y = 510, width=370, height=150)
+fifthFrame.place(x = 30, y = 525, width=370, height=150)
 fifthFrame_Label2 = Label(fifthFrame, image=install).pack(side="right")
 fifthFrame_Label = Label(fifthFrame, text=Question5, justify=LEFT, relief = SUNKEN, pady=6, bg="old lace", bd = 4)
 fifthFrame_Label.config(font=framelabelfont)
@@ -473,7 +515,7 @@ def rstrt():
 
 
 sixthFrame = Frame(tab1, bg="steel blue", bd = 8, relief = RIDGE)
-sixthFrame.place(x = 435, y = 510, width=370, height=150)
+sixthFrame.place(x = 435, y = 525, width=370, height=150)
 sixthFrame_Lable2 = Label(sixthFrame, image=shutdown).pack(side="right")
 sixthFrame_Label = Label(sixthFrame, text=Question6, justify=LEFT, relief = SUNKEN, pady=6, bg="old lace", bd = 4)
 sixthFrame_Label.config(font=framelabelfont)
@@ -489,7 +531,7 @@ Button6.pack(side=LEFT, anchor = SW)
 
 
 #headFrame
-headFrame2 = Frame(tab2, bg="tan3", bd=8, relief = RIDGE)
+headFrame2 = Frame(tab21, bg="tan3", bd=8, relief = RIDGE)
 headFrame2.place(x = 30, y = 60, width=775, height=50)
 headFrame_Label2 = Label(headFrame2, text=" User Management- single User ", relief = SUNKEN,bd = 4)
 headFrame_Label2.config(font=headlabelfont)
@@ -747,7 +789,7 @@ def setPwd():
 
 
 #single User
-seventhFrame = Frame(tab2, bg="steel blue", bd = 8, relief = RIDGE)
+seventhFrame = Frame(tab21, bg="steel blue", bd = 8, relief = RIDGE)
 seventhFrame.place(x = 30, y = 150, width=775, height=300)
 seventhFrameLable2 = Label(seventhFrame, image=user_pic).pack(side="left")
 seventhFrameLabel = Label(seventhFrame, text="Single User Mode:   CREATE USER", justify=LEFT, relief = SUNKEN, pady=6, bg="old lace", bd = 4)
@@ -777,28 +819,28 @@ DropDown2.place(x = 505, y = 205, width=220)
 Button8 = Button(seventhFrame, text="Create", fg="black", bg="white", bd=3, command=addSingleUser)
 Button8.place(x = 450, y = 250, width=100)
 
-ninthFrame = Frame(tab2, bg="steel blue", bd = 8, relief = RIDGE)
+ninthFrame = Frame(tab21, bg="steel blue", bd = 8, relief = RIDGE)
 ninthFrame.place(x = 30, y = 480, width=775, height=220)
-ninthFrameLabel = Label(tab2, text="Single User Management Operations", justify=LEFT, relief = SUNKEN, pady=6, bg="old lace", bd = 4)
+ninthFrameLabel = Label(tab21, text="Single User Management Operations", justify=LEFT, relief = SUNKEN, pady=6, bg="old lace", bd = 4)
 ninthFrameLabel.place(x=40,y=490,width=754, height=45)
 
-Btn81 = Button(tab2, text="Delete User", fg="white", bg="red2", bd=3,command=del_user).place(x = 60, y = 560, width=100)
-Btn82 = Button(tab2, text="Lock User", fg="white", bg="tomato", bd=3, command=lock_user).place(x = 60, y = 630, width=100)
-Btn83 = Button(tab2, text="Update Username", fg="black", bg="white", bd=3, command=update_username).place(x = 180, y = 560, width=140)
-Btn84 = Button(tab2, text="Update Password", fg="black", bg="white", bd=3, command=setPwd).place(x = 180, y = 630, width=140)
-Btn85 = Button(tab2, text="Update User's Shell", fg="black", bg="white", bd=3, command=update_usershell).place(x = 340, y = 560, width=160)
-Btn86 = Button(tab2, text="Set Expiry Date", fg="black", bg="white", bd=3,command=setExd).place(x = 340, y = 630, width=160)
-Btn87 = Button(tab2, text="Update UID", fg="black", bg="white", bd=3,command=update_userUID).place(x = 520, y = 560, width=100)
-Btn88 = Button(tab2, text="Update GID", fg="black", bg="white", bd=3,command=update_userGID).place(x = 520, y = 630, width=100)
-Btn89 = Button(tab2, text="Change Home Dir", fg="black", bg="white", bd=3,command=update_homedir).place(x = 640, y = 560, width=140)
-Btn810 = Button(tab2, text="Unlock User", fg="black", bg="pale green", bd=3, command=unlock_user).place(x = 640, y = 630, width=140)
+Btn81 = Button(tab21, text="Delete User", fg="white", bg="red2", bd=3,command=del_user).place(x = 60, y = 560, width=100)
+Btn82 = Button(tab21, text="Lock User", fg="white", bg="tomato", bd=3, command=lock_user).place(x = 60, y = 630, width=100)
+Btn83 = Button(tab21, text="Update Username", fg="black", bg="white", bd=3, command=update_username).place(x = 180, y = 560, width=140)
+Btn84 = Button(tab21, text="Update Password", fg="black", bg="white", bd=3, command=setPwd).place(x = 180, y = 630, width=140)
+Btn85 = Button(tab21, text="Update User's Shell", fg="black", bg="white", bd=3, command=update_usershell).place(x = 340, y = 560, width=160)
+Btn86 = Button(tab21, text="Set Expiry Date", fg="black", bg="white", bd=3,command=setExd).place(x = 340, y = 630, width=160)
+Btn87 = Button(tab21, text="Update UID", fg="black", bg="white", bd=3,command=update_userUID).place(x = 520, y = 560, width=100)
+Btn88 = Button(tab21, text="Update GID", fg="black", bg="white", bd=3,command=update_userGID).place(x = 520, y = 630, width=100)
+Btn89 = Button(tab21, text="Change Home Dir", fg="black", bg="white", bd=3,command=update_homedir).place(x = 640, y = 560, width=140)
+Btn810 = Button(tab21, text="Unlock User", fg="black", bg="pale green", bd=3, command=unlock_user).place(x = 640, y = 630, width=140)
 
 
 ############## Assignment 4 part2 ########################
 
 
 #headFrame
-headFrame3 = Frame(tab3, bg="tan3", bd=8, relief = RIDGE)
+headFrame3 = Frame(tab22, bg="tan3", bd=8, relief = RIDGE)
 headFrame3.place(x = 30, y = 60, width=775, height=50)
 headFrame_Label3 = Label(headFrame3, text=" User Management- Batch Mode ", relief = SUNKEN,bd = 4)
 headFrame_Label3.config(font=headlabelfont)
@@ -1208,52 +1250,52 @@ def setPwd_batch():
 
 
 #batchMode
-eightFrame = Frame(tab3, bg="steel blue", bd = 8, relief = RIDGE)
+eightFrame = Frame(tab22, bg="steel blue", bd = 8, relief = RIDGE)
 eightFrame.place(x = 30, y = 150, width=775, height=220)
 eightFrameLable2 = Label(eightFrame, image=batch_pic).pack(side="left")
-eightFrameLabel = Label(tab3, text="Batch Mode:  CREATE USER", justify=LEFT, relief = SUNKEN, pady=6, bg="old lace", bd = 4)
+eightFrameLabel = Label(tab22, text="Batch Mode:  CREATE USER", justify=LEFT, relief = SUNKEN, pady=6, bg="old lace", bd = 4)
 eightFrameLabel.config(font=framelabelfont)
 eightFrameLabel.place(x=220,y=160,width=545, height=50)
-Button9 = Button(tab3, text="upload CSV", fg="black", bg="white", bd=3, command=uploadCSV)
+Button9 = Button(tab22, text="upload CSV", fg="black", bg="white", bd=3, command=uploadCSV)
 Button9.place(x=350,y=270)
-Button91 = Button(tab3, text="Create", fg="black", bg="white", bd=3, command=batchMode)
+Button91 = Button(tab22, text="Create", fg="black", bg="white", bd=3, command=batchMode)
 Button91.place(x=500,y=270, width=100)
 
-tenthFrame = Frame(tab3, bg="steel blue", bd = 8, relief = RIDGE)
+tenthFrame = Frame(tab22, bg="steel blue", bd = 8, relief = RIDGE)
 tenthFrame.place(x = 30, y = 400, width=775, height=300)
 tenthFrameLable = Label(tenthFrame, text="Batch Mode Management Operations", justify=LEFT, relief = SUNKEN, pady=6, bg="old lace", bd = 4)
 tenthFrameLable.config(font=framelabelfont)
 tenthFrameLable.place(x=2,y=2,width=754, height=45)
 
-Btn101 = Button(tab3, text="Delete User", fg="white", bg="red2", bd=3, command=del_users_batch).place(x = 60, y = 530, width=100)
-Btn102 = Button(tab3, text="Lock User", fg="white", bg="tomato", bd=3, command=lock_users_batch).place(x = 60, y = 610, width=100)
-Btn103 = Button(tab3, text="Update Username", fg="black", bg="white", bd=3,command=update_username_batch).place(x = 180, y = 530, width=140)
-Btn104 = Button(tab3, text="Update Password", fg="black", bg="white", bd=3, command=setPwd_batch).place(x = 180, y = 610, width=140)
-Btn105 = Button(tab3, text="Update User's Shell", fg="black", bg="white", bd=3,command=update_usershell_batch).place(x = 340, y = 530, width=160)
-Btn106 = Button(tab3, text="Set Expiry Date", fg="black", bg="white", bd=3, command=setExd_batch).place(x = 340, y = 610, width=160)
-Btn107 = Button(tab3, text="Update UID", fg="black", bg="white", bd=3, command=update_userUID_batch).place(x = 520, y = 530, width=100)
-Btn108 = Button(tab3, text="Update GID", fg="black", bg="white", bd=3, command=update_userGID_batch).place(x = 520, y = 610, width=100)
-Btn109 = Button(tab3, text="Change Home Dir", fg="black", bg="white", bd=3, command=update_homedir_batch).place(x = 640, y = 530, width=140)
-Btn110 = Button(tab3, text="Unlock User", fg="black", bg="pale green", bd=3, command=unlock_user_batch).place(x = 640, y = 610, width=140)
+Btn101 = Button(tab22, text="Delete User", fg="white", bg="red2", bd=3, command=del_users_batch).place(x = 60, y = 530, width=100)
+Btn102 = Button(tab22, text="Lock User", fg="white", bg="tomato", bd=3, command=lock_users_batch).place(x = 60, y = 610, width=100)
+Btn103 = Button(tab22, text="Update Username", fg="black", bg="white", bd=3,command=update_username_batch).place(x = 180, y = 530, width=140)
+Btn104 = Button(tab22, text="Update Password", fg="black", bg="white", bd=3, command=setPwd_batch).place(x = 180, y = 610, width=140)
+Btn105 = Button(tab22, text="Update User's Shell", fg="black", bg="white", bd=3,command=update_usershell_batch).place(x = 340, y = 530, width=160)
+Btn106 = Button(tab22, text="Set Expiry Date", fg="black", bg="white", bd=3, command=setExd_batch).place(x = 340, y = 610, width=160)
+Btn107 = Button(tab22, text="Update UID", fg="black", bg="white", bd=3, command=update_userUID_batch).place(x = 520, y = 530, width=100)
+Btn108 = Button(tab22, text="Update GID", fg="black", bg="white", bd=3, command=update_userGID_batch).place(x = 520, y = 610, width=100)
+Btn109 = Button(tab22, text="Change Home Dir", fg="black", bg="white", bd=3, command=update_homedir_batch).place(x = 640, y = 530, width=140)
+Btn110 = Button(tab22, text="Unlock User", fg="black", bg="pale green", bd=3, command=unlock_user_batch).place(x = 640, y = 610, width=140)
 
 ############## Assignment 5 part 1 ########################
 
-#headFrame
-headFrame = Frame(tab4, bg="tan3", bd=8, relief = RIDGE)
+headFrame
+headFrame = Frame(subtab1, bg="tan3", bd=8, relief = RIDGE)
 headFrame.place(x = 30, y = 60, width=775, height=50)
 headFrame_Label = Label(headFrame, text=" Controlling Processes ", relief = SUNKEN,bd = 4)
 headFrame_Label.config(font=headlabelfont)
 headFrame_Label.pack(expand=YES)
 
-eleventhFrame = Frame(tab4, bg="steel blue", bd = 8, relief = RIDGE)
+eleventhFrame = Frame(subtab1, bg="steel blue", bd = 8, relief = RIDGE)
 eleventhFrame.place(x = 30, y = 150, width=370, height=500)
-eleventhFrameLabel = Label(tab4, text="CPU Usage", justify=LEFT, relief = SUNKEN, pady=5, bg="old lace", bd = 4)
+eleventhFrameLabel = Label(subtab1, text="CPU Usage", justify=LEFT, relief = SUNKEN, pady=5, bg="old lace", bd = 4)
 eleventhFrameLabel.config(font=framelabelfont)
 eleventhFrameLabel.place(x=40,y=160,width=350, height=50)
 
-twelvethFrame = Frame(tab4, bg="steel blue", bd = 8, relief = RIDGE)
+twelvethFrame = Frame(subtab1, bg="steel blue", bd = 8, relief = RIDGE)
 twelvethFrame.place(x = 435, y = 150, width=370, height=500)
-twelvethFrameLabel = Label(tab4, text="Memory Usage", justify=LEFT, relief = SUNKEN, pady=5, bg="old lace", bd = 4)
+twelvethFrameLabel = Label(subtab1, text="Memory Usage", justify=LEFT, relief = SUNKEN, pady=5, bg="old lace", bd = 4)
 twelvethFrameLabel.config(font=framelabelfont)
 twelvethFrameLabel.place(x=445,y=160,width=350, height=50)
 
@@ -1290,7 +1332,7 @@ def cpu_update():
     actualFigure = plt.figure(figsize = (5,5))
 
     pie= plt.pie(values, labels=labels, explode = explode, shadow=True, autopct='%1.1f%%')
-    canvas = FigureCanvasTkAgg(actualFigure, master=tab4)
+    canvas = FigureCanvasTkAgg(actualFigure, master=subtab1)
     canvas.get_tk_widget().place(x=45,y=230, width=340, height=340)
     canvas.show()
 
@@ -1329,7 +1371,7 @@ def mem_update():
 
     pie= plt.pie(values, labels=labels, explode = explode, shadow=True, autopct='%1.1f%%')
     # plt.legend(pie[0], labels, loc="upper right")
-    canvas = FigureCanvasTkAgg(actualFigure, master=tab4)
+    canvas = FigureCanvasTkAgg(actualFigure, master=subtab1)
     canvas.get_tk_widget().place(x=450,y=230, width=340, height=340)
     canvas.show()
 
@@ -1337,19 +1379,19 @@ def mem_update():
 cpu_update()
 mem_update()
 
-btn11 = Button(tab4, text="Update", fg="black", bg="light grey", bd=3, command=cpu_update).place(x = 140 , y = 590, width=140)
-btn12 = Button(tab4, text="Update", fg="black", bg="light grey", bd=3, command=mem_update).place(x = 550 , y = 590, width=140)
+btn11 = Button(subtab1, text="Update", fg="black", bg="light grey", bd=3, command=cpu_update).place(x = 140 , y = 590, width=140)
+btn12 = Button(subtab1, text="Update", fg="black", bg="light grey", bd=3, command=mem_update).place(x = 550 , y = 590, width=140)
 
 ############## Assignment 5 part 2 ########################
 
 #headFrame
-headFrame = Frame(tab5, bg="tan3", bd=8, relief = RIDGE)
+headFrame = Frame(subtab2, bg="tan3", bd=8, relief = RIDGE)
 headFrame.place(x = 30, y = 60, width=775, height=50)
-headFrame_Label = Label(headFrame, text=" Periodic Processes ", relief = SUNKEN,bd = 4)
+headFrame_Label = Label(headFrame, text=" priority/niceness values ", relief = SUNKEN,bd = 4)
 headFrame_Label.config(font=headlabelfont)
 headFrame_Label.pack(expand=YES)
 
 #####################################################
-root.minsize(845, 750)
+root.minsize(845, 770)
 root.resizable(0, 0)
 root.mainloop()
