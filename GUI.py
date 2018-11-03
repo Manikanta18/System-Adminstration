@@ -57,21 +57,19 @@ subTabControl.add(subtab3, text='Cron Tester')
 subTabControl.pack(expand=1, fill="both")
 ####
 
-# tab3 = ttk.Frame(tabControl)
-# tabControl.add(tab3, text= 'Controlling and periodic Processes ')
-# subTabControl2 = ttk.Notebook(tab3)
-# # sub tabs of tab3
-# tab31 = ttk.Frame(subTabControl2)
-# tabControl.add(tab31, text='Users')
-#
-# tab32 = ttk.Frame(subTabControl2)
-# tabControl.add(tab32, text='Nice Values')
-#
-# tab33 = ttk.Frame(subTabControl2)
-# tabControl.add(tab33, text='cron tester')
-#
-# subTabControl2.pack(expand=1, fill="both")
-####
+tab4 = ttk.Frame(tabControl)
+tabControl.add(tab4, text='File Permissions')
+
+subTabControl = ttk.Notebook(tab4)
+#sub tabs of tab2
+tab61 = ttk.Frame(subTabControl)
+subTabControl.add(tab61, text='Umask calculator')
+
+tab62 = ttk.Frame(subTabControl)
+subTabControl.add(tab62, text='Permissions')
+
+subTabControl.pack(expand=1, fill="both")
+
 
 tabControl.pack(expand=1, fill="both")
 
@@ -135,6 +133,19 @@ new_name = StringVar()
 new_pwd = StringVar()
 new_uid = StringVar()
 new_shell = StringVar()
+
+nicevalue1 = IntVar()
+nicevalue2 = IntVar()
+nicevalue3 = IntVar()
+nicevalue4 = IntVar()
+nicevalue5 = IntVar()
+
+mask1 = StringVar()
+mask2 = StringVar()
+mask3 = StringVar()
+mask4 = StringVar()
+mask5 = StringVar()
+mask6 = StringVar()
 
 #Login
 NLabel = Label(root,bd=4, text = "User Name", relief = RIDGE)
@@ -537,6 +548,9 @@ headFrame_Label2 = Label(headFrame2, text=" User Management- single User ", reli
 headFrame_Label2.config(font=headlabelfont)
 headFrame_Label2.pack(expand=YES)
 
+#shells present in my machine
+cwdShell = os.getcwd()
+subprocess.call(cwdShell+'/shell.sh')
 
 # on change dropdown value
 def change_dropdown2(*args):
@@ -553,19 +567,22 @@ def addSingleUser():
 
     if pwd != '':
         user_name = new_name.get()
-        user_pwd = crypt.crypt(str(new_pwd.get()), crypt.mksalt(crypt.METHOD_SHA512))
-        # user_pwd = new_pwd.get()
+        # user_pwd = crypt.crypt(str(new_pwd.get()), crypt.mksalt(crypt.METHOD_SHA512))
+        user_pwd = new_pwd.get()
         user_id = new_uid.get()
         user_shell = new_shell.get()
         print(user_name,user_pwd,user_id,user_shell)
 
         if user_name != '' and  user_pwd != '' and user_id != '' and user_shell != '':
             cmd1 = "echo \""+pwd+"\" | sudo -S groupadd -g \""+user_id+"\" \""+user_name+"\""
-            cmd2 = "sudo useradd -m \""+user_name+"\" -p \""+user_pwd+"\" -u \""+user_id+"\" -g \""+user_id+"\" -s \""+user_shell+"\""
+            cmd2 = "sudo useradd -m \""+user_name+"\" -u \""+user_id+"\" -g \""+user_id+"\" -s \""+user_shell+"\""
+            cmd3 = "echo \""+user_name+":"+user_pwd+"\" | sudo chpasswd -c SHA512"
             print(cmd1)
             print(cmd2)
+            print(cmd3)
             subprocess.call(cmd1, shell=True)
             subprocess.call(cmd2, shell=True)
+            subprocess.call(cmd3, shell=True)
             messageBox.showinfo("Add User", "Successfully Added")
         else:
             messageBox.showwarning("WARNING", "Fill User Details")
@@ -581,15 +598,16 @@ def del_user():
     print("pwd :"+pwd)
     if pwd != "":
         username = simpledialog.askstring("Delete USER","Enter Username ",parent=tab2)
+        username2 = simpledialog.askstring("Delete USER","Confirm Username ",parent=tab2)
 
-        if username != "":
+        if username != "" and username == username2:
             cmd1 = "echo \""+pwd+"\" | sudo -S userdel -r \""+username+"\""
             print(cmd1)
             subprocess.call(cmd1, shell=True)
             messageBox.showinfo("Delete User", "Successfully Deleted")
             print("done")
         else:
-            messageBox.showwarning("WARNING", "Enter Username")
+            messageBox.showwarning("WARNING", "Username not matched")
     else:
         messageBox.showwarning("WARNING", "Login Required")
 
@@ -601,15 +619,16 @@ def lock_user():
     print("pwd :"+pwd)
     if pwd != "":
         username = simpledialog.askstring("Lock USER","Enter Username ",parent=tab2)
+        username2 = simpledialog.askstring("Lock USER","Confirm Username ",parent=tab2)
 
-        if username != "":
+        if username != "" and username == username2:
             cmd1 = "echo \""+pwd+"\" | sudo -S usermod -L \""+username+"\""
             print(cmd1)
             subprocess.call(cmd1, shell=True)
             messageBox.showinfo("Lock User", "Successfully Locked")
             print("done")
         else:
-            messageBox.showwarning("WARNING", "Enter Username")
+            messageBox.showwarning("WARNING", "Username not matched")
     else:
         messageBox.showwarning("WARNING", "Login Required")
 
@@ -621,15 +640,16 @@ def unlock_user():
     print("pwd :"+pwd)
     if pwd != "":
         username = simpledialog.askstring("Unlock USER","Enter Username ",parent=tab2)
+        username2 = simpledialog.askstring("Unlock USER","Confirm Username ",parent=tab2)
 
-        if username != "":
+        if username != "" and username == username2:
             cmd1 = "echo \""+pwd+"\" | sudo -S usermod --unlock \""+username+"\""
             print(cmd1)
             subprocess.call(cmd1, shell=True)
             messageBox.showinfo("Unlock User", "Successfully Unlocked")
             print("done")
         else:
-            messageBox.showwarning("WARNING", "Enter Username")
+            messageBox.showwarning("WARNING", "Username not matched")
     else:
         messageBox.showwarning("WARNING", "Login Required")
 
@@ -642,15 +662,16 @@ def update_username():
     if pwd != "":
         username = simpledialog.askstring("Update Username","Enter Username ",parent=tab2)
         new_username = simpledialog.askstring("Update Username","Enter New Username ",parent=tab2)
+        new_username2 = simpledialog.askstring("Update Username","Confirm New Username ",parent=tab2)
 
-        if username != "":
+        if username != "" and new_username == new_username2:
             cmd1 = "echo \""+pwd+"\" | sudo -S usermod -l \""+new_username+"\" \""+username+"\""
             print(cmd1)
             subprocess.call(cmd1, shell=True)
             messageBox.showinfo("Update Username", "Successfully Updated Username")
             print("done")
         else:
-            messageBox.showwarning("WARNING", "Enter Username")
+            messageBox.showwarning("WARNING", "Username not matched")
     else:
         messageBox.showwarning("WARNING", "Login Required")
 
@@ -663,15 +684,16 @@ def update_usershell():
     if pwd != "":
         username = simpledialog.askstring("Update user's shell","Enter Username ",parent=tab2)
         user_sh = simpledialog.askstring("Update user's shell","Enter new Usershell ",parent=tab2)
+        user_sh2 = simpledialog.askstring("Update user's shell","Confirm Usershell ",parent=tab2)
 
-        if username != "":
+        if username != "" and user_sh == user_sh2:
             cmd1 = "echo \""+pwd+"\" | sudo -S usermod -s \""+user_sh+"\" \""+username+"\""
             print(cmd1)
             subprocess.call(cmd1, shell=True)
             messageBox.showinfo("Update User's Shell", "Successfully Updated User's Shell")
             print("done")
         else:
-            messageBox.showwarning("WARNING", "Enter User's shell")
+            messageBox.showwarning("WARNING", "Usershell not matched")
     else:
         messageBox.showwarning("WARNING", "Login Required")
 
@@ -684,15 +706,16 @@ def update_userUID():
     if pwd != "":
         username = simpledialog.askstring("Update user's UID","Enter Username ",parent=tab2)
         user_uid = simpledialog.askstring("Update user's UID","Enter new UID ",parent=tab2)
+        user_uid2 = simpledialog.askstring("Update user's UID","Confirm new UID ",parent=tab2)
 
-        if username != "":
+        if username != "" and user_uid == user_uid2:
             cmd1 = "echo \""+pwd+"\" | sudo -S usermod -u \""+user_uid+"\" \""+username+"\""
             print(cmd1)
             subprocess.call(cmd1, shell=True)
             messageBox.showinfo("Update User's UID", "Successfully Updated User's UID")
             print("done")
         else:
-            messageBox.showwarning("WARNING", "Enter User's UID")
+            messageBox.showwarning("WARNING", "User's UID not matched")
     else:
         messageBox.showwarning("WARNING", "Login Required")
 
@@ -705,8 +728,9 @@ def update_userGID():
     if pwd != "":
         username = simpledialog.askstring("Update user's GID","Enter Username ",parent=tab2)
         user_gid = simpledialog.askstring("Update user's GID","Enter new GID ",parent=tab2)
+        user_gid2 = simpledialog.askstring("Update user's GID","Confirm new GID ",parent=tab2)
 
-        if username != "":
+        if username != "" and user_gid == user_gid2:
             cmd1 = "echo \""+pwd+"\" | sudo -S groupmod -g \""+user_gid+"\" \""+username+"\""
             cmd2 = "echo \""+pwd+"\" | sudo -S usermod -g \""+user_gid+"\" \""+username+"\""
             print(cmd2)
@@ -716,7 +740,7 @@ def update_userGID():
             messageBox.showinfo("Update User's GID", "Successfully Updated User's GID")
             print("done")
         else:
-            messageBox.showwarning("WARNING", "Enter User's GID")
+            messageBox.showwarning("WARNING", "User's GID not matched")
     else:
         messageBox.showwarning("WARNING", "Login Required")
 
@@ -729,8 +753,9 @@ def update_homedir():
     if pwd != "":
         username = simpledialog.askstring("Update user's Home Dir","Enter Username ",parent=tab2)
         user_dir = simpledialog.askstring("Update user's Home Dir","Enter new User's Home Dir ",parent=tab2)
+        user_dir2 = simpledialog.askstring("Update user's Home Dir","Confirm new User's Home Dir ",parent=tab2)
 
-        if username != "":
+        if username != "" and user_dir == user_dir2:
             cmd1 = "echo \""+pwd+"\" | sudo -S mkdir -p \""+user_dir+"\""
             cmd2 = "echo \""+pwd+"\" | sudo -S usermod -d \""+user_dir+"\" \""+username+"\""
             print(cmd2)
@@ -740,7 +765,7 @@ def update_homedir():
             messageBox.showinfo("Update User's Home Dir", "Successfully Updated User's Home Dir")
             print("done")
         else:
-            messageBox.showwarning("WARNING", "Enter User's Home Dir")
+            messageBox.showwarning("WARNING", "User's Home Dir not matched")
     else:
         messageBox.showwarning("WARNING", "Login Required")
 
@@ -753,15 +778,16 @@ def setExd():
     if pwd != "":
         username = simpledialog.askstring("Set Expiry Date","Enter Username ",parent=tab2)
         user_exd = simpledialog.askstring("Set Expiry Date","Enter Expiry Date ",parent=tab2)
+        user_exd2 = simpledialog.askstring("Set Expiry Date","Confirm Expiry Date ",parent=tab2)
 
-        if username != "":
+        if username != "" and user_exd == user_exd2:
             cmd = "echo \""+pwd+"\" | sudo -S usermod -e \""+user_exd+"\" \""+username+"\""
             print(cmd)
             subprocess.call(cmd, shell=True)
             messageBox.showinfo("Set Expiry Date", "Successfully Updated Expiry Date")
             print("done")
         else:
-            messageBox.showwarning("WARNING", "Enter Expiry Date")
+            messageBox.showwarning("WARNING", "Expiry Date not matched")
     else:
         messageBox.showwarning("WARNING", "Login Required")
 
@@ -774,16 +800,16 @@ def setPwd():
     if pwd != "":
         username = simpledialog.askstring("Change Password","Enter Username ",parent=tab2)
         user_pxd = simpledialog.askstring("Change Password","Enter Password ",parent=tab2)
-        e_pwd = crypt.crypt(str(user_pxd), crypt.mksalt(crypt.METHOD_SHA512))
+        user_pxd2 = simpledialog.askstring("Change Password","Confirm Password ",parent=tab2)
 
-        if username != "":
-            cmd = "echo \""+pwd+"\" | sudo -S usermod -p \""+e_pwd+"\" \""+username+"\""
+        if username != "" and user_pxd == user_pxd2:
+            cmd = "echo \""+username+":"+user_pxd+"\" | sudo chpasswd -c SHA512"
             print(cmd)
             subprocess.call(cmd, shell=True)
-            messageBox.showinfo("Change Password", "Successfully Updated Expiry Date")
+            messageBox.showinfo("Change Password", "Successfully Updated Password")
             print("done")
         else:
-            messageBox.showwarning("WARNING", "Enter Password")
+            messageBox.showwarning("WARNING", "Password not matched")
     else:
         messageBox.showwarning("WARNING", "Login Required")
 
@@ -889,10 +915,13 @@ def batchMode():
         for i in range(0,range_lenth):
             cmd1 = "echo \""+pwd+"\" | sudo -S groupadd -g \""+uid[i]+"\" \""+username[i]+"\""
             print(cmd1)
-            cmd2 = "sudo useradd -m \""+username[i]+"\" -p \""+pswd[i]+"\" -u \""+uid[i]+"\" -g \""+uid[i]+"\" -s \""+shll[i]+"\""
+            cmd2 = "sudo useradd -m \""+username[i]+"\" -u \""+uid[i]+"\" -g \""+uid[i]+"\" -s \""+shll[i]+"\""
+            cmd3 = "echo \""+username[i]+":"+pswd[i]+"\" | sudo chpasswd -c SHA512"
             print(cmd2)
+            print(cmd3)
             subprocess.call(cmd1, shell=True)
             subprocess.call(cmd2, shell=True)
+            subprocess.call(cmd3, shell=True)
         messageBox.showinfo("Add Users", "Successfully Added")
     else:
         messageBox.showwarning("WARNING", "Login Required")
@@ -1390,6 +1419,284 @@ headFrame.place(x = 30, y = 60, width=775, height=50)
 headFrame_Label = Label(headFrame, text=" priority/niceness values ", relief = SUNKEN,bd = 4)
 headFrame_Label.config(font=headlabelfont)
 headFrame_Label.pack(expand=YES)
+
+frame13 = Frame(subtab2, bg="steel blue", bd = 8, relief = RIDGE)
+frame13.place(x = 30, y = 150, width=775, height=500)
+frame13Label = Label(frame13, text="Top 5 Processes having maximum Memory usage", justify=LEFT, relief = SUNKEN, pady=5, bg="old lace", bd = 4)
+frame13Label.config(font=framelabelfont)
+frame13Label.place(width=755, height=50)
+
+
+def update_nicetable():
+    cwd = os.getcwd()
+    subprocess.call(cwd+'/nicevalue.sh')
+
+    arr = []
+
+    f = open("nice.txt","r")
+    for ele in f:
+        arr.append(ele.split(' '))
+    f.close()
+
+    for i in range(len(arr)):
+        arr[i][3] = arr[i][3].strip('\n')
+
+    print(arr)
+
+    def update_nicevalue1():
+        global entryb1
+        pwd = entryb1.get()
+        nice = nicevalue1.get()
+        print("pwd :"+pwd)
+
+        if pwd != '':
+            if -20 <= nice <= 19:
+                cmd = "echo \""+pwd+"\" | sudo -S renice "+str(nice)+" "+arr[0][0]
+                print(cmd)
+                subprocess.call(cmd, shell=True)
+                messageBox.showinfo("Update Nice Value", "Successfully Updated")
+            else:
+                messageBox.showwarning("WARNING", "Enter nice value between -20 to 19 only")
+        else:
+            messageBox.showwarning("WARNING", "Login Required")
+
+
+    def update_nicevalue2():
+        global entryb1
+        pwd = entryb1.get()
+        nice = nicevalue2.get()
+        print("pwd :"+pwd)
+
+        if pwd != '':
+            if -20 <= nice <= 19:
+                cmd = "echo \""+pwd+"\" | sudo -S renice "+str(nice)+" "+arr[1][0]
+                print(cmd)
+                subprocess.call(cmd, shell=True)
+                messageBox.showinfo("Update Nice Value", "Successfully Updated")
+            else:
+                messageBox.showwarning("WARNING", "Enter nice value between -20 to 19 only")
+        else:
+            messageBox.showwarning("WARNING", "Login Required")
+
+
+    def update_nicevalue3():
+        global entryb1
+        pwd = entryb1.get()
+        nice = nicevalue3.get()
+        print("pwd :"+pwd)
+
+        if pwd != '':
+            if -20 <= nice <= 19:
+                cmd = "echo \""+pwd+"\" | sudo -S renice "+str(nice)+" "+arr[2][0]
+                print(cmd)
+                subprocess.call(cmd, shell=True)
+                messageBox.showinfo("Update Nice Value", "Successfully Updated")
+            else:
+                messageBox.showwarning("WARNING", "Enter nice value between -20 to 19 only")
+        else:
+            messageBox.showwarning("WARNING", "Login Required")
+
+
+    def update_nicevalue4():
+        global entryb1
+        pwd = entryb1.get()
+        nice = nicevalue4.get()
+        print("pwd :"+pwd)
+
+        if pwd != '':
+            if -20 <= nice <= 19:
+                cmd = "echo \""+pwd+"\" | sudo -S renice "+str(nice)+" "+arr[3][0]
+                print(cmd)
+                subprocess.call(cmd, shell=True)
+                messageBox.showinfo("Update Nice Value", "Successfully Updated")
+            else:
+                messageBox.showwarning("WARNING", "Enter nice value between -20 to 19 only")
+        else:
+            messageBox.showwarning("WARNING", "Login Required")
+
+
+    def update_nicevalue5():
+        global entryb1
+        pwd = entryb1.get()
+        nice = nicevalue5.get()
+        print("pwd :"+pwd)
+
+        if pwd != '':
+            if -20 <= nice <= 19:
+                cmd = "echo \""+pwd+"\" | sudo -S renice "+str(nice)+" "+arr[4][0]
+                print(cmd)
+                subprocess.call(cmd, shell=True)
+                messageBox.showinfo("Update Nice Value", "Successfully Updated")
+            else:
+                messageBox.showwarning("WARNING", "Enter nice value between -20 to 19 only")
+        else:
+            messageBox.showwarning("WARNING", "Login Required")
+
+
+    niceheadLabel = Label(frame13, text="process ID", justify=LEFT, relief = RIDGE, pady=5, bg="tan3", bd = 4)
+    niceheadLabel.config(font=commandsfont)
+    niceheadLabel.place(x=20,y=80,width=140, height=40)
+    niceheadLabel2 = Label(frame13, text="Scheduling Priority", justify=LEFT, relief = RIDGE, pady=5, bg="tan3" , bd = 4)
+    niceheadLabel2.config(font=commandsfont)
+    niceheadLabel2.place(x=175,y=80,width=140, height=40)
+    niceheadLabel3 = Label(frame13, text="Niceness value", justify=LEFT, relief = RIDGE, pady=5, bg="tan3", bd = 4)
+    niceheadLabel3.config(font=commandsfont)
+    niceheadLabel3.place(x=330,y=80,width=140, height=40)
+    niceheadLabel4 = Label(frame13, text="Update Niceness", justify=LEFT, relief = RIDGE, pady=5, bg="tan3", bd = 4)
+    niceheadLabel4.config(font=commandsfont)
+    niceheadLabel4.place(x=485,y=80,width=140, height=40)
+
+    x_value = 20
+    y_value = 140
+    for i in range(0, len(arr)):
+        Label(frame13, text=arr[i][0], justify=LEFT, relief = RIDGE, pady=5, bg="alice blue", bd = 4).place(x=x_value,y=y_value,width=140, height=40)
+        Label(frame13, text=arr[i][1], justify=LEFT, relief = RIDGE, pady=5, bg="alice blue", bd = 4).place(x=x_value+155,y=y_value,width=140, height=40)
+        Label(frame13, text=arr[i][2], justify=LEFT, relief = RIDGE, pady=5, bg="alice blue", bd = 4).place(x=x_value+310,y=y_value,width=140, height=40)
+        y_value += 50
+
+    E1 = Entry(frame13, textvariable=nicevalue1, bd=4).place(x=485,y=140,width=140, height=40)
+    E2 = Entry(frame13, textvariable=nicevalue2, bd=4).place(x=485,y=190,width=140, height=40)
+    E3 = Entry(frame13, textvariable=nicevalue3, bd=4).place(x=485,y=240,width=140, height=40)
+    E4 = Entry(frame13, textvariable=nicevalue4, bd=4).place(x=485,y=290,width=140, height=40)
+    E5 = Entry(frame13, textvariable=nicevalue5, bd=4).place(x=485,y=340,width=140, height=40)
+    But1 = Button(frame13, text="Update", fg="black", bg="light grey", bd=4, command=update_nicevalue1).place(x=640,y=140,width=100, height=40)
+    But2 = Button(frame13, text="Update", fg="black", bg="light grey", bd=4, command=update_nicevalue2).place(x=640,y=190,width=100, height=40)
+    But3 = Button(frame13, text="Update", fg="black", bg="light grey", bd=4, command=update_nicevalue3).place(x=640,y=240,width=100, height=40)
+    But4 = Button(frame13, text="Update", fg="black", bg="light grey", bd=4, command=update_nicevalue4).place(x=640,y=290,width=100, height=40)
+    But5 = Button(frame13, text="Update", fg="black", bg="light grey", bd=4, command=update_nicevalue5).place(x=640,y=340,width=100, height=40)
+
+
+update_nicetable()
+
+But6 = Button(frame13, text="Reset", fg="black", bg="light grey", bd=4, command=update_nicetable).place(x=330,y=400,width=100,height=40)
+
+############## Assignment 6 ########################
+
+#headFrame
+headFrame = Frame(tab61, bg="tan3", bd=8, relief = RIDGE)
+headFrame.place(x = 30, y = 60, width=775, height=50)
+headFrame_Label = Label(headFrame, text=" Unmask Calculator ", relief = SUNKEN,bd = 4)
+headFrame_Label.config(font=headlabelfont)
+headFrame_Label.pack(expand=YES)
+
+frame61 = Frame(tab61, bg="steel blue", bd = 8, relief = RIDGE)
+frame61.place(x = 30, y = 140, width=775, height=250)
+frame61_Label = Label(frame61, text="File (regular) permissions", justify=LEFT, relief = SUNKEN, pady=6, bg="old lace", bd = 4)
+frame61_Label.config(font=framelabelfont)
+frame61_Label.place(width=760, height=50)
+
+Label(frame61,bd=4, text = "Enter Unmask value", relief = RIDGE, pady=5).place(x = 90 , y = 70, width=250)
+
+E61 = Entry(frame61, textvariable=mask1, bd=3).place(x=390,y=70,width=70, height=30)
+E62 = Entry(frame61, textvariable=mask2, bd=3).place(x=480,y=70,width=70, height=30)
+E63 = Entry(frame61, textvariable=mask3, bd=3).place(x=570,y=70,width=70, height=30)
+
+l61 = Label(frame61,bd=4, text = "Default File Permissions", relief = RIDGE, pady=5).place(x = 90 , y = 120,  width=250)
+l62 = Label(frame61,bd=4, text = "output", relief = RIDGE, bg="peach puff", pady=5)
+l62.place(x = 390 , y = 120,  width=250)
+
+def getUnmaskFile():
+    m1 = mask1.get()
+    m2 = mask2.get()
+    m3 = mask3.get()
+    #default value
+    default = ["---","--x","-w-","-wx","r--","r-x","rw-", "rwx"]
+    value = [4,2,1]
+
+    if m1 not in default or m2 not in default or m3 not in default:
+        messageBox.showwarning("WARNING", "Enter Right Values")
+    else:
+        m1 = list(m1)
+        m2 = list(m2)
+        m3 = list(m3)
+
+        count1=0
+        count2=0
+        count3=0
+
+        for i in range(0,3):
+            if m1[i] == "-":
+               count1 = count1+value[i]
+            if m2[i] == "-":
+               count2 = count2+value[i]
+            if m3[i] == "-":
+               count3 = count3+value[i]
+
+        if count1 == 7:
+            p1 = default[0]
+        else:
+            p1 = default[6-count1]
+
+        if count2 == 7:
+            p2 = default[0]
+        else:
+            p2 = default[6-count2]
+
+        if count3 == 7:
+            p3 = default[0]
+        else:
+            p3 = default[6-count3]
+
+        l62.config(text=p1+" "+p2+" "+p3)
+
+
+
+B61 = Button(frame61, text="Submit", fg="black", bd=3, bg ="white", command=getUnmaskFile).place(x=330,y=180,width=100,height=40)
+
+#####
+
+frame62 = Frame(tab61, bg="steel blue", bd = 8, relief = RIDGE)
+frame62.place(x = 30, y = 420, width=775, height=250)
+frame62_Label = Label(frame62, text="Directory permissions", justify=LEFT, relief = SUNKEN, pady=6, bg="old lace", bd = 4)
+frame62_Label.config(font=framelabelfont)
+frame62_Label.place(width=760, height=50)
+
+Label(frame62,bd=4, text = "Enter Umask value", relief = RIDGE, pady=5).place(x = 90 , y = 70, width=250)
+
+E61 = Entry(frame62, textvariable=mask4, bd=3).place(x=390,y=70,width=70, height=30)
+E62 = Entry(frame62, textvariable=mask5, bd=3).place(x=480,y=70,width=70, height=30)
+E63 = Entry(frame62, textvariable=mask6, bd=3).place(x=570,y=70,width=70, height=30)
+
+l63 = Label(frame62,bd=4, text = "Default Directory Permissions", relief = RIDGE, pady=5).place(x = 90 , y = 120,  width=250)
+l64 = Label(frame62,bd=4, text = "output", relief = RIDGE, bg="peach puff", pady=5)
+l64.place(x = 390 , y = 120,  width=250)
+
+def getUnmaskDir():
+    m1 = mask4.get()
+    m2 = mask5.get()
+    m3 = mask6.get()
+    #default value
+    default = ["---","--x","-w-","-wx","r--","r-x","rw-", "rwx"]
+    value = [4,2,1]
+
+    if m1 not in default or m2 not in default or m3 not in default:
+        messageBox.showwarning("WARNING", "Enter Right Values")
+    else:
+        m1 = list(m1)
+        m2 = list(m2)
+        m3 = list(m3)
+
+        count1=0
+        count2=0
+        count3=0
+
+        for i in range(0,3):
+            if m1[i] == "-":
+               count1 = count1+value[i]
+            if m2[i] == "-":
+               count2 = count2+value[i]
+            if m3[i] == "-":
+               count3 = count3+value[i]
+
+        p1 = default[7-count1]
+        p2 = default[7-count2]
+        p3 = default[7-count3]
+
+        l64.config(text=p1+" "+p2+" "+p3)
+
+
+B62 = Button(frame62, text="Submit", fg="black", bd=3, bg ="white", command=getUnmaskDir).place(x=330,y=180,width=100,height=40)
+
 
 #####################################################
 root.minsize(845, 770)
