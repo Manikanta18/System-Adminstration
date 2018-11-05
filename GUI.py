@@ -66,7 +66,7 @@ tab61 = ttk.Frame(subTabControl)
 subTabControl.add(tab61, text='Umask calculator')
 
 tab62 = ttk.Frame(subTabControl)
-subTabControl.add(tab62, text='Permissions')
+subTabControl.add(tab62, text='Access Control List')
 
 subTabControl.pack(expand=1, fill="both")
 
@@ -75,7 +75,8 @@ tabControl.pack(expand=1, fill="both")
 
 #fonts
 headlabelfont = ('times', 18, 'bold')
-framelabelfont = ('times', 11)
+framelabelfont = ('times', 12)
+framelabelfont2 = ('times', 11)
 commandsfont = ('times', 11)
 
 #images
@@ -146,6 +147,13 @@ mask3 = StringVar()
 mask4 = StringVar()
 mask5 = StringVar()
 mask6 = StringVar()
+
+acl_user = StringVar()
+acl_userPrmxn = StringVar()
+acl_user_file = StringVar()
+acl_group = StringVar()
+acl_groupPrmxn = StringVar()
+acl_group_file = StringVar()
 
 #Login
 NLabel = Label(root,bd=4, text = "User Name", relief = RIDGE)
@@ -265,7 +273,7 @@ os_name.trace('w', change_dropdown)
 firstFrame = Frame(tab1, bg="steel blue", bd = 8, relief = RIDGE)
 firstFrame.place(x = 30, y = 165, width=370, height=150)
 firstFrame_Label = Label(firstFrame, text=Question1, justify=LEFT, relief = SUNKEN, pady=6, bg="old lace", bd = 4)
-firstFrame_Label.config(font=framelabelfont)
+firstFrame_Label.config(font=framelabelfont2)
 firstFrame_Label.place(width=260, height=70)
 firstFrame_Label2 = Label(firstFrame, image=grub).pack(side="right")
 os_name.set('-Select-')
@@ -300,7 +308,7 @@ secondFrame = Frame(tab1, bg="steel blue", bd = 8, relief = RIDGE)
 secondFrame.place(x = 435, y = 165, width=370, height=150)
 secondFrame_Label2 = Label(secondFrame, image=stop).pack(side="right")
 secondFrame_Label = Label(secondFrame, text=Question2, justify=LEFT, relief = SUNKEN, pady=6, bg="old lace", bd = 4)
-secondFrame_Label.config(font=framelabelfont)
+secondFrame_Label.config(font=framelabelfont2)
 secondFrame_Label.place(width=260, height=70)
 
 TimeEntry = Entry(tab1, textvariable=time_value, bd=4, bg="light grey")
@@ -318,7 +326,7 @@ Button2.place(x=550,y=270)
 thirdFrame = Frame(tab1, bg="steel blue", bd = 8, relief = RIDGE)
 thirdFrame.place(x = 30, y = 345 , width=370, height=150)
 thirdFrame_Label = Label(thirdFrame, text=Question3, justify=LEFT, relief = SUNKEN, pady=6, bg="old lace", bd = 4)
-thirdFrame_Label.config(font=framelabelfont)
+thirdFrame_Label.config(font=framelabelfont2)
 thirdFrame_Label.place(width=270, height=70)
 thirdFrame_Label2 = Label(thirdFrame, image=swap).pack(side="right")
 
@@ -408,7 +416,7 @@ fourthFrame = Frame(tab1, bg="steel blue", bd = 8, relief = RIDGE)
 fourthFrame.place(x = 435, y = 345 , width=370, height=150)
 fourthFrame_Label2 = Label(fourthFrame, image=ubuntu).pack(side="right")
 fourthFrame_Label = Label(fourthFrame, text=Question4, justify=LEFT, relief = SUNKEN, pady=6, bg="old lace", bd = 4)
-fourthFrame_Label.config(font=framelabelfont)
+fourthFrame_Label.config(font=framelabelfont2)
 fourthFrame_Label.place(width=260, height=70)
 
 Button4 = Button(tab1, text="Splash screen", fg="black", bg="white", bd=3, command=splash_screen)
@@ -463,7 +471,7 @@ fifthFrame = Frame(tab1, bg="steel blue", bd = 8, relief = RIDGE)
 fifthFrame.place(x = 30, y = 525, width=370, height=150)
 fifthFrame_Label2 = Label(fifthFrame, image=install).pack(side="right")
 fifthFrame_Label = Label(fifthFrame, text=Question5, justify=LEFT, relief = SUNKEN, pady=6, bg="old lace", bd = 4)
-fifthFrame_Label.config(font=framelabelfont)
+fifthFrame_Label.config(font=framelabelfont2)
 fifthFrame_Label.place(width=260, height=70)
 
 Button5 = Button(fifthFrame, text="Read", fg="black", bg="white", command=read, bd=3)
@@ -529,7 +537,7 @@ sixthFrame = Frame(tab1, bg="steel blue", bd = 8, relief = RIDGE)
 sixthFrame.place(x = 435, y = 525, width=370, height=150)
 sixthFrame_Lable2 = Label(sixthFrame, image=shutdown).pack(side="right")
 sixthFrame_Label = Label(sixthFrame, text=Question6, justify=LEFT, relief = SUNKEN, pady=6, bg="old lace", bd = 4)
-sixthFrame_Label.config(font=framelabelfont)
+sixthFrame_Label.config(font=framelabelfont2)
 sixthFrame_Label.place(width=260, height=70)
 
 Button7 = Button(sixthFrame, text="reboot", fg="black", bg="chartreuse3", command=rstrt, bd=3)
@@ -551,6 +559,19 @@ headFrame_Label2.pack(expand=YES)
 #shells present in my machine
 cwdShell = os.getcwd()
 subprocess.call(cwdShell+'/shell.sh')
+
+shellData = pd.read_csv("shell.csv")
+sdf = pd.DataFrame(shellData)
+shellmat = []
+for row in sdf.iterrows():
+    shellmat.append(row)
+range_lenth = len(shellmat)
+shell = []
+for i in range(0,range_lenth):
+    shell.append(shellmat[i][1][0])
+
+print(shell)
+
 
 # on change dropdown value
 def change_dropdown2(*args):
@@ -839,7 +860,7 @@ shellLabel.place(x = 270, y = 205, width=230)
 # shellEntry = Entry(seventhframe, textvariable=new_shell, bd=4)
 # shellEntry.place(x = 500, y = 205, width=230)
 new_shell.set('-Select-')
-choices2 = {'/bin/bash','/bin/sh'}
+choices2 = shell
 DropDown2 = OptionMenu(seventhFrame, new_shell, *choices2)
 DropDown2.place(x = 505, y = 205, width=220)
 Button8 = Button(seventhFrame, text="Create", fg="black", bg="white", bd=3, command=addSingleUser)
@@ -1570,7 +1591,7 @@ update_nicetable()
 
 But6 = Button(frame13, text="Reset", fg="black", bg="light grey", bd=4, command=update_nicetable).place(x=330,y=400,width=100,height=40)
 
-############## Assignment 6 ########################
+############## Assignment 6 tab1 ########################
 
 #headFrame
 headFrame = Frame(tab61, bg="tan3", bd=8, relief = RIDGE)
@@ -1638,6 +1659,7 @@ def getUnmaskFile():
             p3 = default[6-count3]
 
         l62.config(text=p1+" "+p2+" "+p3)
+        messageBox.showinfo("Umask", "Successfully Updated")
 
 
 
@@ -1693,10 +1715,135 @@ def getUnmaskDir():
         p3 = default[7-count3]
 
         l64.config(text=p1+" "+p2+" "+p3)
+        messageBox.showinfo("Umask", "Successfully Updated")
 
 
 B62 = Button(frame62, text="Submit", fg="black", bd=3, bg ="white", command=getUnmaskDir).place(x=330,y=180,width=100,height=40)
 
+############## Assignment 6 tab2 #######################
+
+
+#headFrame
+headFrame = Frame(tab62, bg="tan3", bd=8, relief = RIDGE)
+headFrame.place(x = 30, y = 60, width=775, height=50)
+headFrame_Label = Label(headFrame, text=" Access Control List (ACL) ", relief = SUNKEN,bd = 4)
+headFrame_Label.config(font=headlabelfont)
+headFrame_Label.pack(expand=YES)
+
+frame611 = Frame(tab62, bg="steel blue", bd = 8, relief = RIDGE)
+frame611.place(x = 30, y = 140, width=775, height=260)
+frame611_Label = Label(frame611, text=" User ", justify=LEFT, relief = SUNKEN, pady=6, bg="old lace", bd = 4)
+frame611_Label.config(font=framelabelfont)
+frame611_Label.place(width=760, height=50)
+
+l611 = Label(frame611,bd=4, text = "Enter Username", relief = RIDGE, pady=5).place(x = 90 , y = 70, width=250)
+e611 = Entry(frame611, textvariable=acl_user, bd=4).place(x=390,y=70,width=180, height=34)
+
+l612 = Label(frame611,bd=4, text = "Enter File name", relief = RIDGE, pady=5).place(x = 90 , y = 109, width=250)
+e612 = Entry(frame611, textvariable=acl_user_file, bd=4).place(x=390,y=109,width=180, height=34)
+
+l613 = Label(frame611,bd=4, text = "Enter Permissions", relief = RIDGE, pady=5).place(x = 90 , y = 148, width=250)
+e613 = Entry(frame611, textvariable=acl_userPrmxn, bd=4).place(x=390,y=148,width=70, height=34)
+
+######
+
+frame621 = Frame(tab62, bg="steel blue", bd = 8, relief = RIDGE)
+frame621.place(x = 30, y = 430, width=775, height=260)
+frame621_Label = Label(frame621, text=" Group ", justify=LEFT, relief = SUNKEN, pady=6, bg="old lace", bd = 4)
+frame621_Label.config(font=framelabelfont)
+frame621_Label.place(width=760, height=50)
+
+l621 = Label(frame621,bd=4, text = "Enter groupname", relief = RIDGE, pady=5).place(x = 90 , y = 70, width=250)
+e621 = Entry(frame621, textvariable=acl_group, bd=4).place(x=390,y=70,width=180, height=34)
+
+l622 = Label(frame621,bd=4, text = "Enter File name", relief = RIDGE, pady=5).place(x = 90 , y = 109, width=250)
+e622 = Entry(frame621, textvariable=acl_group_file, bd=4).place(x=390,y=109,width=180, height=34)
+
+l623 = Label(frame621,bd=4, text = "Enter Permissions", relief = RIDGE, pady=5).place(x = 90 , y = 148, width=250)
+e623 = Entry(frame621, textvariable=acl_groupPrmxn, bd=4).place(x=390,y=148,width=70, height=34)
+
+
+def setAclUser():
+    default = ["---","--x","-w-","-wx","r--","r-x","rw-", "rwx"]
+    user = acl_user.get()
+    prmxn = acl_userPrmxn.get()
+    file = acl_user_file.get()
+    global entryb1
+    pwd = entryb1.get()
+    if pwd != '':
+        if prmxn not in default:
+            messageBox.showwarning("WARNING", "Enter Right Values")
+        elif file == '' or user == '':
+            messageBox.showwarning("WARNING", "Fill the values")
+        else:
+            acl_cmd = "echo \""+pwd+"\" | sudo -S setfacl -m u:"+user+":"+prmxn+" "+file
+            print(acl_cmd)
+            subprocess.call(acl_cmd, shell=True)
+            messageBox.showinfo("ACL", "Successfully Added")
+    else:
+        messageBox.showwarning("WARNING", "Login Required")
+
+
+def setAclGroup():
+    default = ["---","--x","-w-","-wx","r--","r-x","rw-", "rwx"]
+    group = acl_group.get()
+    prmxn = acl_groupPrmxn.get()
+    file = acl_group_file.get()
+    global entryb1
+    pwd = entryb1.get()
+    if pwd != '':
+        if prmxn not in default:
+            messageBox.showwarning("WARNING", "Enter Right Values")
+        elif file == '' or group == '':
+            messageBox.showwarning("WARNING", "Fill the values")
+        else:
+            cmd = "echo \""+pwd+"\" | sudo -S setfacl -m g:"+group+":"+prmxn+" "+file
+            print(cmd)
+            subprocess.call(cmd, shell=True)
+            messageBox.showinfo("ACL", "Successfully Added")
+    else:
+        messageBox.showwarning("WARNING", "Login Required")
+
+
+def delAclUser():
+    user = acl_user.get()
+    file = acl_user_file.get()
+    global entryb1
+    pwd = entryb1.get()
+    if pwd != '':
+        if file == '' or user == '':
+            messageBox.showwarning("WARNING", "enter username and file name")
+        else:
+            acl_cmd = "echo \""+pwd+"\" | sudo -S setfacl -x "+user+" "+file
+            print(acl_cmd)
+            subprocess.call(acl_cmd, shell=True)
+            messageBox.showinfo("ACL", "Successfully Deleted")
+    else:
+        messageBox.showwarning("WARNING", "Login Required")
+
+
+def delAclGroup():
+    group = acl_group.get()
+    file = acl_group_file.get()
+    global entryb1
+    pwd = entryb1.get()
+    if pwd != '':
+        if file == '' or group == '':
+            messageBox.showwarning("WARNING", "Fill the values")
+        else:
+            cmd = "echo \""+pwd+"\" | sudo -S setfacl -x g:"+group+" "+file
+            print(cmd)
+            subprocess.call(cmd, shell=True)
+            messageBox.showinfo("ACL", "Successfully Deleted")
+    else:
+        messageBox.showwarning("WARNING", "Login Required")
+
+
+b613 = Button(frame611, text="Add", fg="black", bd=3, bg ="white", command=setAclUser).place(x=235,y=200,width=100,height=40)
+b614 = Button(frame611, text="Delete", fg="white", bg="red2", bd=3, command=delAclUser).place(x=385,y=200,width=100,height=40)
+
+b623 = Button(frame621, text="Add", fg="black", bd=3, bg ="white", command=setAclGroup).place(x=235,y=200,width=100,height=40)
+b624 = Button(frame621, text="Delete", fg="white", bg="red2", bd=3, command=delAclGroup).place(x=385,y=200,width=100,height=40)
 
 #####################################################
 root.minsize(845, 770)
