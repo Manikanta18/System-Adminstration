@@ -68,6 +68,9 @@ subTabControl.add(tab61, text='Umask calculator')
 tab62 = ttk.Frame(subTabControl)
 subTabControl.add(tab62, text='Access Control List')
 
+tab63 = ttk.Frame(subTabControl)
+subTabControl.add(tab63, text='Default Permissions')
+
 subTabControl.pack(expand=1, fill="both")
 
 
@@ -1844,6 +1847,77 @@ b614 = Button(frame611, text="Delete", fg="white", bg="red2", bd=3, command=delA
 
 b623 = Button(frame621, text="Add", fg="black", bd=3, bg ="white", command=setAclGroup).place(x=235,y=200,width=100,height=40)
 b624 = Button(frame621, text="Delete", fg="white", bg="red2", bd=3, command=delAclGroup).place(x=385,y=200,width=100,height=40)
+
+#################### Assignment 6 tab 3 ###############
+
+fileper = StringVar()
+fname = StringVar()
+dirper = StringVar()
+dname = StringVar()
+
+def setFile():
+    filename = fname.get()
+    prmxn = fileper.get()
+    global entryb1
+    pwd = entryb1.get()
+    if pwd != '':
+        cmd = "echo \""+pwd+"\" | sudo -S chmod "+prmxn+" "+filename
+        print(cmd)
+        subprocess.call(cmd, shell=True)
+        messageBox.showinfo("Default Permissions", "Successfully Done")
+    else:
+        messageBox.showwarning("WARNING", "Login Required")
+
+
+def setDir():
+    filename = dname.get()
+    prmxn = dirper.get()
+    global entryb1
+    pwd = entryb1.get()
+    if pwd != '':
+        cmd = "echo \""+pwd+"\" | sudo -S chmod "+prmxn+" "+filename
+        print(cmd)
+        subprocess.call(cmd, shell=True)
+        messageBox.showinfo("Default Permissions", "Successfully Done")
+    else:
+        messageBox.showwarning("WARNING", "Login Required")
+
+
+#headFrame
+headFrame = Frame(tab63, bg="tan3", bd=8, relief = RIDGE)
+headFrame.place(x = 30, y = 60, width=775, height=50)
+headFrame_Label = Label(headFrame, text=" Default Permissions ", relief = SUNKEN,bd = 4)
+headFrame_Label.config(font=headlabelfont)
+headFrame_Label.pack(expand=YES)
+
+frame63 = Frame(tab63, bg="steel blue", bd = 8, relief = RIDGE)
+frame63.place(x = 30, y = 140, width=775, height=250)
+frame63_Label = Label(frame63, text="File (regular) permissions", justify=LEFT, relief = SUNKEN, pady=6, bg="old lace", bd = 4)
+frame63_Label.config(font=framelabelfont)
+frame63_Label.place(width=760, height=50)
+
+Label(frame63,bd=4, text = "Enter File Name", relief = RIDGE, pady=5).place(x = 90 , y = 70, width=250)
+Label(frame63,bd=4, text = "Enter File Permissions", relief = RIDGE, pady=5).place(x = 90 , y = 120,  width=250)
+E61 = Entry(frame63, textvariable=fname, bd=3).place(x=390,y=70,width=180, height=34)
+E62 = Entry(frame63, textvariable=fileper, bd=3).place(x=390,y=120,width=180, height=34)
+
+
+B61 = Button(frame63, text="Set", fg="black", bd=3, bg ="white", command=setFile).place(x=330,y=180,width=100,height=40)
+
+#####
+
+frame632 = Frame(tab63, bg="steel blue", bd = 8, relief = RIDGE)
+frame632.place(x = 30, y = 420, width=775, height=250)
+frame632_Label = Label(frame632, text="Directory permissions", justify=LEFT, relief = SUNKEN, pady=6, bg="old lace", bd = 4)
+frame632_Label.config(font=framelabelfont)
+frame632_Label.place(width=760, height=50)
+
+Label(frame632,bd=4, text = "Enter File Name", relief = RIDGE, pady=5).place(x = 90 , y = 70, width=250)
+Label(frame632,bd=4, text = "Enter File Permissions", relief = RIDGE, pady=5).place(x = 90 , y = 120,  width=250)
+E61 = Entry(frame632, textvariable=dname, bd=3).place(x=390,y=70,width=180, height=34)
+E62 = Entry(frame632, textvariable=dirper, bd=3).place(x=390,y=120,width=180, height=34)
+
+B62 = Button(frame632, text="Set", fg="black", bd=3, bg ="white", command=setDir).place(x=330,y=180,width=100,height=40)
 
 #####################################################
 root.minsize(845, 770)
