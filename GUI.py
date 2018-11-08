@@ -2017,7 +2017,8 @@ Button(frame51, text="Submit", fg="black", bd=3, bg ="white", command=setlog).pl
 
 ############### log Rotation
 
-radioVar = IntVar()
+radioVar1 = IntVar()
+radioVar2 = IntVar()
 logfile2 = StringVar()
 no_rotations = IntVar()
 log_size = StringVar()
@@ -2026,7 +2027,33 @@ compress = StringVar()
 check = IntVar()
 
 def logRot():
-    pass
+    logfilename = logfile2.get()
+    size_value = log_size.get()
+    time_value = time.get()
+    rotations = str(no_rotations.get())
+    if check.get() == 1:
+        checkif = "notifempty"
+    else:
+        checkif = ""
+    compress_value = compress.get()
+    global entryb1
+    pwd = entryb1.get()
+    if pwd != '':
+        cmd = "touch insertfile.txt"
+        print(cmd)
+        subprocess.call(cmd, shell=True)
+
+        cmd2 = "chmod 777 logRotate.sh"
+        subprocess.call(cmd2, shell=True)
+
+        cmd3 = "echo \""+pwd+"\" | sudo -S ./logRotate.sh "+logfilename+" "+size_value+" "+time_value+" "+rotations+" "+compress_value+" "+checkif
+        print(cmd3)
+        subprocess.call(cmd3, shell=True)
+        messageBox.showinfo("Log rotate", "Successfully Done")
+    else:
+        messageBox.showwarning("WARNING", "Login Required")
+
+
 
 #headFrame
 headFrame = Frame(tab52, bg="tan3", bd=8, relief = RIDGE)
@@ -2048,13 +2075,15 @@ def change_dropdown6(*args):
     print( time.get() )
 
 def radioSel():
-    if radioVar.get() == 1:
+    if radioVar1.get() == 1:
         E_size.config(state=NORMAL)
-        DD6.config(state=DISABLED)
-
-    if radioVar.get() == 2:
+    if radioVar1.get() == 0:
         E_size.config(state=DISABLED)
+    if radioVar2.get() == 0:
+        DD6.config(state=DISABLED)
+    if radioVar2.get() == 1:
         DD6.config(state=NORMAL)
+
 
 
 def change_dropdown5(*args):
@@ -2071,22 +2100,23 @@ Label(frame52,bd=5, text = "Log File to store Log Entries",  relief = RIDGE, pad
 Entry(frame52, textvariable=logfile2, bd=3, bg="white").place(x=350,y=80,width=250, height=35)
 Label(frame52,bd=5, text = "Log Rotation", relief = RIDGE, pady=5).place(x = 70 , y = 130,  width=250)
 
-R1 = Radiobutton(frame52, text=" Size ",indicatoron = 0, bd = 4, variable=radioVar, value=1,command=radioSel)
-R1.place(x = 225 , y = 180, width=90, height=30)
-R2 = Radiobutton(frame52, text=" Time ",indicatoron = 0,  bd = 4, variable=radioVar, value=2,command=radioSel)
-R2.place(x = 225 , y = 220,  width=90, height=30)
+Checkbutton(frame52, text = " Size ", bd=4, relief = RIDGE, variable = radioVar1, onvalue = 1,offvalue = 0, height=50, width = 50, command=radioSel).place(x = 225 , y = 180, width=90, height=30)
+Checkbutton(frame52, text = " Time ", bd=4, relief = RIDGE, variable = radioVar2, onvalue = 1,offvalue = 0, height=50, width = 50, command=radioSel).place(x = 225 , y = 220,  width=90, height=30)
+
 
 E_size = Entry(frame52, textvariable=log_size, bd=3, bg="white")
-E_size.place(x=350,y=180,width=200, height=30)
+E_size.place(x=350,y=180,width=250, height=30)
+E_size.config(state=DISABLED)
 
 time.trace('w', change_dropdown6)
-time.set('compress')
+time.set('daily')
 DD6 = OptionMenu(frame52, time, *time_values)
-DD6.place(x=350,y=220,width=200, height=30)
+DD6.place(x=350,y=220,width=250, height=30)
 DD6.config(bg='white')
+DD6.config(state=DISABLED)
 
 Label(frame52,bd=5, text = "Max number of log files", relief = RIDGE, pady=5).place(x = 70 , y = 270,  width=250)
-Entry(frame52, textvariable=no_rotations, bd=3, bg="white").place(x=350,y=270,height=35, width=100)
+Entry(frame52, textvariable=no_rotations, bd=3, bg="white").place(x=350,y=270,height=35, width=250)
 Label(frame52,bd=5, text = "Compression", relief = RIDGE, pady=5).place(x = 70 , y = 320,  width=250)
 Checkbutton(frame52, text = "Do not rotate if log file is empty", bd=4, relief = RIDGE, variable = check, onvalue = 1,offvalue = 0, height=50, width = 50).place(x = 70 , y = 370, height=40, width=250)
 
