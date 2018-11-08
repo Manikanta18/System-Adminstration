@@ -44,15 +44,15 @@ tab3 = ttk.Frame(tabControl)
 tabControl.add(tab3, text='Controlling and periodic Processes')
 
 subTabControl = ttk.Notebook(tab3)
-#sub tabs of tab2
+#sub tabs of tab3
 subtab1 = ttk.Frame(subTabControl)
 subTabControl.add(subtab1, text='Users Memory and CPU usage')
 
 subtab2 = ttk.Frame(subTabControl)
 subTabControl.add(subtab2, text='Nice Values')
 
-subtab3 = ttk.Frame(subTabControl)
-subTabControl.add(subtab3, text='Cron Tester')
+# subtab3 = ttk.Frame(subTabControl)
+# subTabControl.add(subtab3, text='Cron Tester')
 
 subTabControl.pack(expand=1, fill="both")
 ####
@@ -61,7 +61,7 @@ tab4 = ttk.Frame(tabControl)
 tabControl.add(tab4, text='File Permissions')
 
 subTabControl = ttk.Notebook(tab4)
-#sub tabs of tab2
+#sub tabs of tab4
 tab61 = ttk.Frame(subTabControl)
 subTabControl.add(tab61, text='Umask calculator')
 
@@ -73,6 +73,20 @@ subTabControl.add(tab63, text='Default Permissions')
 
 subTabControl.pack(expand=1, fill="both")
 
+####
+
+tab5 = ttk.Frame(tabControl)
+tabControl.add(tab5, text='Syslog and Log Files')
+
+subTabControl = ttk.Notebook(tab5)
+#sub tabs of tab4
+tab51 = ttk.Frame(subTabControl)
+subTabControl.add(tab51, text='Managing Log Files')
+
+tab52 = ttk.Frame(subTabControl)
+subTabControl.add(tab52, text='Log Rotaion')
+
+subTabControl.pack(expand=1, fill="both")
 
 tabControl.pack(expand=1, fill="both")
 
@@ -866,6 +880,7 @@ new_shell.set('-Select-')
 choices2 = shell
 DropDown2 = OptionMenu(seventhFrame, new_shell, *choices2)
 DropDown2.place(x = 505, y = 205, width=220)
+DropDown2.config(bg='white')
 Button8 = Button(seventhFrame, text="Create", fg="black", bg="white", bd=3, command=addSingleUser)
 Button8.place(x = 450, y = 250, width=100)
 
@@ -1918,6 +1933,167 @@ E61 = Entry(frame632, textvariable=dname, bd=3).place(x=390,y=70,width=180, heig
 E62 = Entry(frame632, textvariable=dirper, bd=3).place(x=390,y=120,width=180, height=34)
 
 B62 = Button(frame632, text="Set", fg="black", bd=3, bg ="white", command=setDir).place(x=330,y=180,width=100,height=40)
+
+################## syslog and logfiles ############
+
+logfile = StringVar()
+
+facilityVar = StringVar()
+levelsVar = StringVar()
+symbolVar = StringVar()
+
+#headFrame tab1
+headFrame = Frame(tab51, bg="tan3", bd=8, relief = RIDGE)
+headFrame.place(x = 30, y = 60, width=775, height=50)
+headFrame_Label = Label(headFrame, text=" Managing Log Files ", relief = SUNKEN,bd = 4)
+headFrame_Label.config(font=headlabelfont)
+headFrame_Label.pack(expand=YES)
+
+frame51 = Frame(tab51, bg="steel blue", bd = 8, relief = RIDGE)
+frame51.place(x = 30, y = 150, width=775, height=400)
+frame51Label = Label(frame51, text=" Managing Log Files ", justify=LEFT, relief = SUNKEN, pady=5, bg="old lace", bd = 4)
+frame51Label.config(font=framelabelfont)
+frame51Label.place(width=755, height=50)
+
+def setlog():
+    fac = facilityVar.get()
+    lev = levelsVar.get()
+    sym = symbolVar.get()
+    fileName = logfile.get()
+    global entryb1
+    pwd = entryb1.get()
+
+    if pwd != '':
+        cmd = "echo \""+pwd+"\" | sudo -S touch "+fileName
+        print(cmd)
+        subprocess.call(cmd, shell=True)
+
+        logline = fac+"."+sym+lev+"    "+fileName
+        cwd = os.getcwd()
+
+        cmd2 = "chmod 777 manageLog.sh"
+        subprocess.call(cmd2, shell=True)
+
+        cmd3 = "echo \""+pwd+"\" | sudo -S ./manageLog.sh "+logline
+        print(cmd3)
+        subprocess.call(cmd3, shell=True)
+        messageBox.showinfo("Manage Log files", "Successfully Done")
+    else:
+        messageBox.showwarning("WARNING", "Login Required")
+
+
+facility = ["*", "kern", "user", "mail", "daemon", "auth", "syslog", "lpr", "news", "cron", "authprev", "ftp", "mark", "local0", "local1", "local2", "local3", "local4", "local5","local6", "local7"]
+levels = ["*", "none", "emerg", "alert", "crit", "err", "warning", "notice", "info", "debug"]
+
+
+def change_dropdown3(*args):
+    print( facilityVar.get() )
+
+
+def change_dropdown4(*args):
+    print( levelsVar.get() )
+
+
+facilityVar.trace('w', change_dropdown3)
+facilityVar.set('kern')
+DD1 = OptionMenu(frame51, facilityVar, *facility)
+DD1.place(x=410,y=100,width=250, height=35)
+DD1.config(bg='white')
+
+levelsVar.trace('w', change_dropdown4)
+levelsVar.set('emerg')
+DD2 = OptionMenu(frame51, levelsVar, *levels)
+DD2.place(x=410,y=170,width=250, height=35)
+DD2.config(bg='white')
+
+
+Label(frame51,bd=5, text = "Facility", relief = RIDGE, pady=5).place(x = 90 , y = 100, width=250)
+Label(frame51,bd=5, text = "Level", relief = RIDGE, pady=5).place(x = 90 , y = 170,  width=250)
+Label(frame51,bd=5, text = "Log File to store Log Entries", relief = RIDGE, pady=5).place(x = 90 , y = 240,  width=250)
+Entry(frame51, textvariable=logfile, bd=3, bg="white").place(x=410,y=240,width=250, height=35)
+Entry(frame51, textvariable=symbolVar, bd=3, bg="white").place(x=350,y=170,width=50, height=35)
+
+Button(frame51, text="Submit", fg="black", bd=3, bg ="white", command=setlog).place(x=330,y=300,width=100,height=40)
+
+############### log Rotation
+
+radioVar = IntVar()
+logfile2 = StringVar()
+no_rotations = IntVar()
+log_size = StringVar()
+time = StringVar()
+compress = StringVar()
+check = IntVar()
+
+def logRot():
+    pass
+
+#headFrame
+headFrame = Frame(tab52, bg="tan3", bd=8, relief = RIDGE)
+headFrame.place(x = 30, y = 60, width=775, height=50)
+headFrame_Label = Label(headFrame, text=" Log Rotation ", relief = SUNKEN,bd = 4)
+headFrame_Label.config(font=headlabelfont)
+headFrame_Label.pack(expand=YES)
+
+frame52 = Frame(tab52, bg="steel blue", bd = 8, relief = RIDGE)
+frame52.place(x = 30, y = 150, width=775, height=500)
+frame52Label = Label(frame52, text=" Log Rotation ", justify=LEFT, relief = SUNKEN, pady=5, bg="old lace", bd = 4)
+frame52Label.config(font=framelabelfont)
+frame52Label.place(width=755, height=50)
+
+compress_values = ["compress", "delaycompress"]
+time_values = ["daily", "weekly", "monthly"]
+
+def change_dropdown6(*args):
+    print( time.get() )
+
+def radioSel():
+    if radioVar.get() == 1:
+        E_size.config(state=NORMAL)
+        DD6.config(state=DISABLED)
+
+    if radioVar.get() == 2:
+        E_size.config(state=DISABLED)
+        DD6.config(state=NORMAL)
+
+
+def change_dropdown5(*args):
+    print( compress.get() )
+
+
+compress.trace('w', change_dropdown5)
+compress.set('compress')
+DD5 = OptionMenu(frame52, compress, *compress_values)
+DD5.place(x=350,y=320,width=250, height=35)
+DD5.config(bg='white')
+
+Label(frame52,bd=5, text = "Log File to store Log Entries",  relief = RIDGE, pady=5).place(x = 70 , y = 80, width=250)
+Entry(frame52, textvariable=logfile2, bd=3, bg="white").place(x=350,y=80,width=250, height=35)
+Label(frame52,bd=5, text = "Log Rotation", relief = RIDGE, pady=5).place(x = 70 , y = 130,  width=250)
+
+R1 = Radiobutton(frame52, text=" Size ",indicatoron = 0, bd = 4, variable=radioVar, value=1,command=radioSel)
+R1.place(x = 225 , y = 180, width=90, height=30)
+R2 = Radiobutton(frame52, text=" Time ",indicatoron = 0,  bd = 4, variable=radioVar, value=2,command=radioSel)
+R2.place(x = 225 , y = 220,  width=90, height=30)
+
+E_size = Entry(frame52, textvariable=log_size, bd=3, bg="white")
+E_size.place(x=350,y=180,width=200, height=30)
+
+time.trace('w', change_dropdown6)
+time.set('compress')
+DD6 = OptionMenu(frame52, time, *time_values)
+DD6.place(x=350,y=220,width=200, height=30)
+DD6.config(bg='white')
+
+Label(frame52,bd=5, text = "Max number of log files", relief = RIDGE, pady=5).place(x = 70 , y = 270,  width=250)
+Entry(frame52, textvariable=no_rotations, bd=3, bg="white").place(x=350,y=270,height=35, width=100)
+Label(frame52,bd=5, text = "Compression", relief = RIDGE, pady=5).place(x = 70 , y = 320,  width=250)
+Checkbutton(frame52, text = "Do not rotate if log file is empty", bd=4, relief = RIDGE, variable = check, onvalue = 1,offvalue = 0, height=50, width = 50).place(x = 70 , y = 370, height=40, width=250)
+
+
+
+
+Button(frame52, text="Submit", fg="black", bd=3, bg ="white", command=logRot).place(x=350,y=430,width=100,height=35)
 
 #####################################################
 root.minsize(845, 770)
