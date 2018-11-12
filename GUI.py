@@ -84,7 +84,7 @@ tab51 = ttk.Frame(subTabControl)
 subTabControl.add(tab51, text='Managing Log Files')
 
 tab52 = ttk.Frame(subTabControl)
-subTabControl.add(tab52, text='Log Rotaion')
+subTabControl.add(tab52, text='Log Rotation')
 
 subTabControl.pack(expand=1, fill="both")
 
@@ -1614,7 +1614,7 @@ But6 = Button(frame13, text="Reset", fg="black", bg="light grey", bd=4, command=
 #headFrame
 headFrame = Frame(tab61, bg="tan3", bd=8, relief = RIDGE)
 headFrame.place(x = 30, y = 60, width=775, height=50)
-headFrame_Label = Label(headFrame, text=" Unmask Calculator ", relief = SUNKEN,bd = 4)
+headFrame_Label = Label(headFrame, text=" Umask Calculator ", relief = SUNKEN,bd = 4)
 headFrame_Label.config(font=headlabelfont)
 headFrame_Label.pack(expand=YES)
 
@@ -1624,7 +1624,7 @@ frame61_Label = Label(frame61, text="File (regular) permissions", justify=LEFT, 
 frame61_Label.config(font=framelabelfont)
 frame61_Label.place(width=760, height=50)
 
-Label(frame61,bd=4, text = "Enter Unmask value", relief = RIDGE, pady=5).place(x = 90 , y = 70, width=250)
+Label(frame61,bd=4, text = "Enter Umask value", relief = RIDGE, pady=5).place(x = 90 , y = 70, width=250)
 
 E61 = Entry(frame61, textvariable=mask1, bd=3).place(x=390,y=70,width=70, height=30)
 E62 = Entry(frame61, textvariable=mask2, bd=3).place(x=480,y=70,width=70, height=30)
@@ -2039,7 +2039,7 @@ def logRot():
     global entryb1
     pwd = entryb1.get()
     if pwd != '':
-        cmd = "touch insertfile.txt"
+        cmd = "echo \""+pwd+"\" | sudo -S touch "+logfilename
         print(cmd)
         subprocess.call(cmd, shell=True)
 
