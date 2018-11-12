@@ -2039,6 +2039,26 @@ def logRot():
     global entryb1
     pwd = entryb1.get()
     if pwd != '':
+
+        cmdr = "rm insertfile.txt"
+        print(cmdr)
+        subprocess.call(cmdr, shell=True)
+
+        f = open("insertfile.txt","w+")
+        f.write("\n")
+        f.write(str(logfilename)+"\r\n")
+        f.write("{"+"\r\n")
+        f.write("    rotate "+rotations+"\r\n")
+        if time_value != "":
+         f.write("    "+str(time_value)+" \r\n")
+        if size_value != "":
+            f.write("    size "+str(size_value)+" \r\n")
+        f.write("    "+str(compress_value)+"\r\n")
+        f.write("    "+checkif+"\r\n")
+        f.write("}")
+        f.write("\n")
+        f.close()
+
         cmd = "echo \""+pwd+"\" | sudo -S touch "+logfilename
         print(cmd)
         subprocess.call(cmd, shell=True)
@@ -2046,7 +2066,9 @@ def logRot():
         cmd2 = "chmod 777 logRotate.sh"
         subprocess.call(cmd2, shell=True)
 
-        cmd3 = "echo \""+pwd+"\" | sudo -S ./logRotate.sh "+logfilename+" "+size_value+" "+time_value+" "+rotations+" "+compress_value+" "+checkif
+        cmd3 = "echo \""+pwd+"\" | sudo -S ./logRotate.sh"
+
+        # cmd3 = "echo \""+pwd+"\" | sudo -S ./logRotate.sh "+logfilename+" "+size_value+" "+time_value+" "+rotations+" "+compress_value+" "+checkif
         print(cmd3)
         subprocess.call(cmd3, shell=True)
         messageBox.showinfo("Log rotate", "Successfully Done")
