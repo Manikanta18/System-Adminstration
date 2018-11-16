@@ -944,7 +944,7 @@ def batchMode():
         username.append(matrix[i][1][0])
         uid.append(str(matrix[i][1][1]))
         #encrypting password
-        pswd.append(crypt.crypt(str(matrix[i][1][2]), crypt.mksalt(crypt.METHOD_SHA512)))
+        pswd.append(str(matrix[i][1][2]))
         shll.append(matrix[i][1][3])
 
     global entryb1
@@ -1305,12 +1305,12 @@ def setPwd_batch():
         for i in range(0,range_lenth):
             username.append(matrix[i][1][0])
             print(matrix[i][1][0])
-            set_pwd.append(crypt.crypt(str(matrix[i][1][1]), crypt.mksalt(crypt.METHOD_SHA512)))
+            set_pwd.append(str(matrix[i][1][1]))
 
         for i in range(0,range_lenth):
-            cmd = "echo \""+pwd+"\" | sudo -S usermod -p \""+set_pwd[i]+"\" \""+username[i]+"\""
-            print(cmd)
-            subprocess.call(cmd, shell=True)
+            cmd2 = "echo \""+username[i]+":"+set_pwd[i]+"\" | sudo chpasswd -c SHA512"
+            print(cmd2)
+            subprocess.call(cmd2, shell=True)
         print("done")
         messageBox.showinfo("Update Password", "Successfully Updated Passwords")
     else:
