@@ -1,1 +1,1 @@
-cat insertfile.txt >> /etc/logrotate.conf
+cat insertfile.txt >> /etc/logrotate.d/rsyslog

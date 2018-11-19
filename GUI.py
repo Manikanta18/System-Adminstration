@@ -2071,6 +2071,9 @@ def logRot():
         # cmd3 = "echo \""+pwd+"\" | sudo -S ./logRotate.sh "+logfilename+" "+size_value+" "+time_value+" "+rotations+" "+compress_value+" "+checkif
         print(cmd3)
         subprocess.call(cmd3, shell=True)
+        cmd4 = "sudo logrotate /etc/logrotate.conf"
+        print(cmd4)
+        subprocess.call(cmd4, shell=True)
         messageBox.showinfo("Log rotate", "Successfully Done")
     else:
         messageBox.showwarning("WARNING", "Login Required")
