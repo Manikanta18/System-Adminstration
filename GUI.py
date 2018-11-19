@@ -2048,15 +2048,18 @@ def logRot():
         f.write("\n")
         f.write(str(logfilename)+"\r\n")
         f.write("{"+"\r\n")
-        f.write("    rotate "+rotations+"\r\n")
-        if time_value != "":
-         f.write("    "+str(time_value)+" \r\n")
+        f.write("        rotate "+rotations+"\r\n")
+        if time_value != "-select-":
+         f.write("        "+str(time_value)+" \r\n")
         if size_value != "":
-            f.write("    size "+str(size_value)+" \r\n")
-        f.write("    "+str(compress_value)+"\r\n")
-        f.write("    "+checkif+"\r\n")
-        f.write("}")
-        f.write("\n")
+            f.write("        size "+str(size_value)+" \r\n")
+        f.write("        "+str(compress_value)+"\r\n")
+        if checkif != "":
+            f.write("        "+checkif+"\r\n")
+        f.write("""        postrotate
+               /usr/lib/rsyslog/rsyslog-rotate
+        endscript """+"\r\n")
+        f.write("}\n")
         f.close()
 
         cmd = "echo \""+pwd+"\" | sudo -S touch "+logfilename
@@ -2134,7 +2137,7 @@ E_size.place(x=350,y=180,width=250, height=30)
 E_size.config(state=DISABLED)
 
 time.trace('w', change_dropdown6)
-time.set('daily')
+time.set('-select-')
 DD6 = OptionMenu(frame52, time, *time_values)
 DD6.place(x=350,y=220,width=250, height=30)
 DD6.config(bg='white')
