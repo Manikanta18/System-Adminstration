@@ -2,9 +2,7 @@
 
 ## Prerequisites
 
-```
-it should Linux machine
-```
+**_It should Linux machine_**
 ```
 sudo apt-get update
 ```
